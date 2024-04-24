@@ -12,7 +12,7 @@ function Home() {
   //const navigate = useNavigate();
   const handlePress = useCallback(async () => {
     // alert("commencer la consultation");
-    const url = patient_service.getMeetingURL("11111");
+    const url = patient_service.getMeetingURL("11111", "sdfsdfsd");
     if (url) {
       // navigate(url);
       // window.open(url);
