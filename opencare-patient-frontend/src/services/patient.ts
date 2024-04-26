@@ -1,14 +1,19 @@
-import { PatientRepository, getPatientRepository } from "../api/PatientRepository";
 import Doctor from "../models/Doctor";
 import Patient from "../models/Patient";
+import { getHospitalRepository } from "../repositories/Hospital";
+import HospitalRepository from "../repositories/Hospital/repository";
+import { getRoomRepository } from "../repositories/Room";
+import RoomRepository from "../repositories/Room/repository";
 
 class PatientService {
   static instance: PatientService | null = null;
 
-  repository: PatientRepository;
+  hospital_rep: HospitalRepository;
+  room_rep: RoomRepository;
 
   constructor() {
-    this.repository = getPatientRepository();
+    this.hospital_rep = getHospitalRepository();
+    this.room_rep = getRoomRepository();
   }
 
   /**
@@ -50,9 +55,9 @@ class PatientService {
    * @returns details of a patient
    */
   async getPatient(patient_id: string): Promise<Patient> {
-    return await this.repository.getO3PatientDetail(patient_id);
+    return await this.hospital_rep.getPatientDetail(patient_id);
   }
-  
+
 }
 
 export default PatientService;

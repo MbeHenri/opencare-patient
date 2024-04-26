@@ -13,7 +13,10 @@ export const O3_BASE64 = base64(`${O3_USER}:${O3_PASSWORD}`);
 // Talk env variables
 const TALK_USER = process.env.TALK_USER;
 const TALK_PASSWORD = process.env.TALK_PASSWORD;
-const TALK_PORT = process.env.TALK_PORT;
-const TALK_HOST = process.env.TALK_HOST;
+export const TALK_PORT = process.env.TALK_PORT;
+export const TALK_HOST = process.env.TALK_HOST;
 
-export const TALK_BASE_URL = `http://${TALK_USER}:${TALK_PASSWORD}@${TALK_HOST}:${TALK_PORT}/ocs/v2.php/apps/spreed/api/v4/`;
+export const TALK_BASE64 = base64(`${TALK_USER}:${TALK_PASSWORD}`);
+
+export const NC_BASE_URL = `http://${TALK_HOST}:${TALK_PORT}/ocs/v2.php`
+export const TALK_BASE_URL = `${NC_BASE_URL}/apps/spreed/api/v4`;

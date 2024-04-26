@@ -1,8 +1,9 @@
+import Room from "./Room";
 
 interface Doctor {
     id: string,
     names: string,
-    speciality: string,
+    related_room: Room
 }
 
 export default Doctor;
