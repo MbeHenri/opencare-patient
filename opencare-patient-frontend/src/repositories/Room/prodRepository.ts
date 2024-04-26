@@ -29,7 +29,7 @@ class ProdRoomRepository extends RoomRepository {
         await fetch(`${NC_BASE_URL}/cloud/users`, requestOptions);
     }
 
-    async createRoom(name: string): Promise<Room> {
+    async createRoom(name: string = "ocare"): Promise<Room> {
 
         var myHeaders = new Headers();
         myHeaders.append("OCS-APIRequest", "true");

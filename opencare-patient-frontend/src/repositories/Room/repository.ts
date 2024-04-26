@@ -2,7 +2,7 @@ import Room from "../../models/Room";
 
 class RoomRepository {
 
-    async createRoom(name: string): Promise<Room> {
+    async createRoom(name: string ="ocare"): Promise<Room> {
 
         return new Promise<Room>((resolve) => {
             setTimeout(() => {
