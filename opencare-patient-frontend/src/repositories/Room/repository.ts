@@ -32,7 +32,7 @@ class RoomRepository {
         });
     }
 
-    async getRelatedRooms(user_id: string, password: string): Promise<Array<Room>> {
+    async getRelatedRooms(user_id: string, password: string, filter_name = "ocare"): Promise<Array<Room>> {
 
         return new Promise<Array<Room>>((resolve) => {
             setTimeout(() => {
