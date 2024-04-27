@@ -76,7 +76,7 @@ class ProdRoomRepository extends RoomRepository {
     }
 
 
-    async getRelatedRooms(user_id: string, password: string, filter_name = "ocare"): Promise<Array<Room>> {
+    async getRelatedRooms(user_id: string, password: string): Promise<Array<Room>> {
 
         var myHeaders = new Headers();
         myHeaders.append("OCS-APIRequest", "true");
@@ -96,13 +96,12 @@ class ProdRoomRepository extends RoomRepository {
                 const data: Array<any> = result.ocs.data;
                 data.forEach(element => {
                     const name: string = element.displayName;
-                    if (name.includes(filter_name)) {
-                        const token: string = element.token;
-                        rooms.push({
-                            token: token,
-                            name: name
-                        })
-                    }
+                    const token: string = element.token;
+                    rooms.push({
+                        token: token,
+                        name: name
+                    })
+
                 });
             });
 

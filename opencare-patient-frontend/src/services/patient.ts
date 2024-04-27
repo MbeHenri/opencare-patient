@@ -5,7 +5,7 @@ import { getHospitalRepository } from "../repositories/Hospital";
 import HospitalRepository from "../repositories/Hospital/repository";
 import { getRoomRepository } from "../repositories/Room";
 import RoomRepository from "../repositories/Room/repository";
-import { TALK_HOST } from "../repositories/env";
+import { TALK_HOST, TALK_PORT } from "../repositories/env";
 
 class PatientService {
   static instance: PatientService | null = null;
@@ -31,15 +31,25 @@ class PatientService {
     }
 
   }
-   
-   /**
-    * get a room link related to a doctor
-    * @param doctor doctor
+
+  /**
+   * get a room link related to a doctor
+   * @param doctor doctor
+   * @returns 
+   */
+  async getMeetingURL(doctor: Doctor): Promise<string> {
+    return await this.getRoomURL(doctor.related_room);
+  }
+
+  /**
+    * get a room link
+    * @param room room
     * @returns 
     */
-  async getMeetingURL(doctor: Doctor): Promise<string> {
-    return `https://${TALK_HOST}:${TALK_HOST}/call/${doctor.related_room.token}`;
+  async getRoomURL(room: Room): Promise<string> {
+    return `https://${TALK_HOST}:${TALK_PORT}/call/${room.token}`;
   }
+
 
   /**
    * get a list of doctors related to theirs rooms 
@@ -51,7 +61,7 @@ class PatientService {
     // on recupère la liste des conversations auquelles le patient est participant
     // en recupérant son mot de passe Talk
     const rooms = await this.getRelatedRooms(patient_id);
-    
+
     // on récupère les docteurs réliés à chacune de ces conversations
     const doctors: Array<Doctor> = [];
     for (let i = 0; i < rooms.length; i++) {
@@ -61,11 +71,11 @@ class PatientService {
     return doctors;
   }
 
- /**
-  * get a related rooms of a patient
-  * @param patient_id O3 identifier of a patient
-  * @returns 
-  */
+  /**
+   * get a related rooms of a patient
+   * @param patient_id O3 identifier of a patient
+   * @returns 
+   */
   async getRelatedRooms(patient_id: string): Promise<Array<Room>> {
 
     // on recupère le mot de passe Talk du patient 

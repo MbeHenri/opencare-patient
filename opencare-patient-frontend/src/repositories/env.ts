@@ -11,8 +11,8 @@ export const O3_BASE_URL = `http://${O3_HOST}:${O3_PORT}/openmrs/ws/rest/v1`;
 export const O3_BASE64 = base64(`${O3_USER}:${O3_PASSWORD}`);
 
 // Talk env variables
-const TALK_USER = process.env.TALK_USER;
-const TALK_PASSWORD = process.env.TALK_PASSWORD;
+export const TALK_USER = process.env.TALK_USER;
+export const TALK_PASSWORD = process.env.TALK_PASSWORD;
 export const TALK_PORT = process.env.TALK_PORT;
 export const TALK_HOST = process.env.TALK_HOST;
 
