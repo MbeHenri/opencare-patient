@@ -1,8 +1,9 @@
 import Room from "../../models/Room";
+import User from "../../models/User";
 
 class RoomRepository {
 
-    async createRoom(name: string ="ocare"): Promise<Room> {
+    async createRoom(name: string = "ocare"): Promise<Room> {
 
         return new Promise<Room>((resolve) => {
             setTimeout(() => {
@@ -58,6 +59,26 @@ class RoomRepository {
             }, 1000);
         });
     }
+
+    async getPasswordUser(user_id: string): Promise<string> {
+
+        return new Promise<string>((resolve) => {
+            setTimeout(() => {
+                const password = `${process.env.TALK_INIT_PASSWORD}`
+                resolve(password);
+            }, 50);
+        });
+    }
+
+    async getRoomParticipants(token_room: string): Promise<Array<User>> {
+
+        return new Promise<Array<User>>((resolve) => {
+            setTimeout(() => {
+                resolve([]);
+            }, 1000);
+        });
+    }
+
 }
 
 export default RoomRepository;

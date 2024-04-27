@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import PatientService from "../../services/patient";
+import Doctor from "../../models/Doctor";
 //import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -12,12 +13,19 @@ function Home() {
   //const navigate = useNavigate();
   const handlePress = useCallback(async () => {
     // alert("commencer la consultation");
-    const url = patient_service.getMeetingURL("11111", "sdfsdfsd");
-    if (url) {
-      // navigate(url);
-      // window.open(url);
+    const doctor: Doctor = {
+      id: "id1",
+      names: "Jacques",
+      related_room: {
+        name: "id1#idd2",
+        token: "sdsdfdf",
+      },
+    };
+
+    // need loading marker
+    patient_service.getMeetingURL(doctor).then((url) => {
       setUrl(url);
-    }
+    });
   }, [patient_service]);
 
   return (

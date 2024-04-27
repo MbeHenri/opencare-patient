@@ -2,6 +2,7 @@ import { NC_BASE_URL, TALK_BASE64, TALK_BASE_URL } from "../env";
 import Room from "../../models/Room";
 import { base64 } from "../../utils";
 import RoomRepository from "./repository";
+import User from "../../models/User";
 
 
 class ProdRoomRepository extends RoomRepository {
@@ -146,6 +147,33 @@ class ProdRoomRepository extends RoomRepository {
         await fetch(`${TALK_BASE_URL}/room/${token_room}/password`, requestOptions);
     }
 
+    async getRoomParticipants(token_room: string): Promise<Array<User>> {
+
+        var myHeaders = new Headers();
+        myHeaders.append("OCS-APIRequest", "true");
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Basic ${TALK_BASE64}}`);
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+        };
+        const participants: Array<User> = [];
+        await fetch(`${TALK_BASE_URL}/room/${token_room}/participants`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                const data: Array<any> = result.ocs.data;
+                data.forEach(element => {
+                    participants.push({
+                        names: element.displayName,
+                        id: element.actorId
+                    })
+                });
+            });
+
+        return participants;
+    }
 }
 
 export default ProdRoomRepository;
