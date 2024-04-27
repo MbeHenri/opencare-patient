@@ -31,13 +31,12 @@ class PatientService {
     }
 
   }
-
-  /**
-   * get a room link related to a doctor
-   * @param patient_id O3 identifier of a patient
-   * @param doctor_id O3 identifier of a related doctor
-   * @returns URL of the meeting
-   */
+   
+   /**
+    * get a room link related to a doctor
+    * @param doctor doctor
+    * @returns 
+    */
   async getMeetingURL(doctor: Doctor): Promise<string> {
     return `https://${TALK_HOST}:${TALK_HOST}/call/${doctor.related_room.token}`;
   }
