@@ -5,7 +5,7 @@ import { getHospitalRepository } from "../repositories/Hospital";
 import HospitalRepository from "../repositories/Hospital/repository";
 import { getRoomRepository } from "../repositories/Room";
 import RoomRepository from "../repositories/Room/repository";
-import { TALK_HOST, TALK_PORT } from "../repositories/env";
+import BaseService from "./base";
 
 class PatientService {
   static instance: PatientService | null = null;
@@ -47,7 +47,7 @@ class PatientService {
     * @returns 
     */
   async getRoomURL(room: Room): Promise<string> {
-    return `https://${TALK_HOST}:${TALK_PORT}/call/${room.token}`;
+    return await BaseService.getRoomURL(room);
   }
 
 
