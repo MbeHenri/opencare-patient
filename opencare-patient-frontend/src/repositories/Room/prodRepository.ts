@@ -90,7 +90,8 @@ class ProdRoomRepository extends RoomRepository {
         };
 
         let rooms: Array<Room> = [];
-        await fetch(`${TALK_BASE_URL}/room`, requestOptions)
+
+        await fetch(`http://localhost:8010/ocs/v2.php/apps/spreed/api/v4/room`, requestOptions)
             .then(response => response.json())
             .then(result => {
                 const data: Array<any> = result.ocs.data;
@@ -101,7 +102,6 @@ class ProdRoomRepository extends RoomRepository {
                         token: token,
                         name: name
                     })
-
                 });
             });
 

@@ -32,7 +32,7 @@ class BaseService {
     * @returns 
     */
     static async getRoomURL(room: Room): Promise<string> {
-        return `https://${TALK_HOST}:${TALK_PORT}/call/${room.token}`;
+        return `http://${TALK_HOST}:${TALK_PORT}/call/${room.token}`;
     }
    
     /**
