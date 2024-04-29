@@ -1,32 +1,26 @@
-import React, { useCallback, useMemo, useState } from "react";
-import PatientService from "../../services/patient";
+import React, { useState } from "react";
+/* import PatientService from "../../services/patient";
 import Doctor from "../../models/Doctor";
+import JoinRoomButton from "../RoomButton/JoinRoomButton";
+import Patient from "../../models/Patient"; */
+import RoomButton from "../RoomButton";
 //import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const patient_service = useMemo(() => {
+  /*   const patient_service = useMemo(() => {
     return PatientService.getInstance();
-  }, []);
+  }, []); */
 
   const [url, setUrl] = useState("");
 
-  //const navigate = useNavigate();
-  const handlePress = useCallback(async () => {
-    // alert("commencer la consultation");
-    const doctor: Doctor = {
-      id: "id1",
-      names: "Jacques",
-      related_room: {
-        name: "id1#idd2",
-        token: "sdsdfdf",
-      },
-    };
-
-    // need loading marker
-    patient_service.getMeetingURL(doctor).then((url) => {
-      setUrl(url);
-    });
-  }, [patient_service]);
+  /*   const patient: Patient = {
+    o3_id: "44588",
+    names: "Sarah Taylor",
+    gender: "F",
+    age: 61,
+    birthdate: new Date("1962-09-09T00:00:00.000+0000"),
+    birthdateEstimated: false,
+  }; */
 
   return (
     <div className="container">
@@ -51,12 +45,17 @@ function Home() {
                 <td>Doe John</td>
                 <td>Généraliste</td>
                 <td>
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={handlePress}
-                  >
-                    Joindre
-                  </button>
+                  <RoomButton
+                    doctor={{
+                      id: "id1",
+                      names: "Jacques",
+                      related_room: {
+                        name: "id1#id2",
+                        token: "sdsdfdf",
+                      },
+                    }}
+                    callback={setUrl}
+                  />
                 </td>
               </tr>
               <tr className="text-white">
@@ -66,12 +65,17 @@ function Home() {
                 <td>Doe John</td>
                 <td>Généraliste</td>
                 <td>
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={handlePress}
-                  >
-                    Joindre
-                  </button>
+                  <RoomButton
+                    doctor={{
+                      id: "id3",
+                      names: "Roland",
+                      related_room: {
+                        name: "id3#id2",
+                        token: "sdsdfdf",
+                      },
+                    }}
+                    callback={setUrl}
+                  />
                 </td>
               </tr>
             </tbody>

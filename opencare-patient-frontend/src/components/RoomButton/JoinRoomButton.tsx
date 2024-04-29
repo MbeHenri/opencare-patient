@@ -26,6 +26,7 @@ const JoinRoomButton: React.FC<Props> = ({
         .then((url) => callback(url))
         .then(() => setLoading(false));
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }, [callback, room, service]);
