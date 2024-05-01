@@ -56,19 +56,23 @@ class PatientService {
    * @param patient_id O3 identifier of a patient
    * @returns array of related Doctors
    */
-  async getRelatedDoctors(patient_id: string): Promise<Array<Doctor>> {
+  async getRelatedDoctors(patient_id: string): Promise<Array<Doctor> | null> {
 
-    // on recupère la liste des conversations auquelles le patient est participant
-    // en recupérant son mot de passe Talk
-    const rooms = await this.getRelatedRooms(patient_id);
+    try {
+      // on recupère la liste des conversations auquelles le patient est participant
+      // en recupérant son mot de passe Talk
+      const rooms = await this.getRelatedRooms(patient_id);
 
-    // on récupère les docteurs réliés à chacune de ces conversations
-    const doctors: Array<Doctor> = [];
-    for (let i = 0; i < rooms.length; i++) {
-      const doctor = await this.getRelatedDoctor(rooms[i]);
-      doctors.push(doctor);
+      // on récupère les docteurs réliés à chacune de ces conversations
+      const doctors: Array<Doctor> = [];
+      for (let i = 0; i < rooms.length; i++) {
+        const doctor = await this.getRelatedDoctor(rooms[i]);
+        doctors.push(doctor);
+      }
+      return doctors;
+    } catch (error) {
+      return null
     }
-    return doctors;
   }
 
   /**
@@ -109,10 +113,13 @@ class PatientService {
    * @param patient_id patient app identifier of a patient
    * @returns details of a patient
    */
-  async getPatient(patient_id: string): Promise<Patient> {
-    return await this.hospital_rep.getPatientDetail(patient_id);
+  async getPatient(patient_id: string): Promise<Patient | null> {
+    try {
+      return await this.hospital_rep.getPatientDetail(patient_id);
+    } catch (error) {
+      return null
+    }
   }
-
 }
 
 export default PatientService;

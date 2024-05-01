@@ -2,6 +2,7 @@ import { O3_BASE64, O3_BASE_URL } from "../env";
 import Patient from "../../models/Patient";
 import User from "../../models/User";
 import HospitalRepository from "./repository";
+import { BadResponse } from "../errors";
 
 
 class ProdHospitalRepository extends HospitalRepository {
@@ -17,7 +18,12 @@ class ProdHospitalRepository extends HospitalRepository {
         };
 
         const result: Patient = await fetch(`${O3_BASE_URL}/patient/${patient_id}?v=full`, requestOptions)
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new BadResponse()
+            })
             .then(result => {
                 const person = result.person;
                 return {
@@ -43,8 +49,13 @@ class ProdHospitalRepository extends HospitalRepository {
             headers: myHeaders,
         };
 
-        const result: User = await fetch(`${O3_BASE_URL}/person/${user_id}?v=full`, requestOptions)
-            .then(response => response.json())
+        const result: User = await fetch(`${O3_BASE_URL}/user/${user_id}?v=full`, requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new BadResponse()
+            })
             .then(result => {
                 const person = result.person;
                 return {
