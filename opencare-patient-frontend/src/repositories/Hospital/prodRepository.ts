@@ -27,7 +27,7 @@ class ProdHospitalRepository extends HospitalRepository {
             .then(result => {
                 const person = result.person;
                 return {
-                    o3_id: person.uuid,
+                    o3_id: result.uuid,
                     names: person.display,
                     gender: person.gender,
                     age: person.age,
