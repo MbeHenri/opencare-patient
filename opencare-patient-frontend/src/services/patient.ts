@@ -14,8 +14,8 @@ class PatientService {
   room_rep: RoomRepository;
 
   constructor() {
-    this.hospital_rep = getHospitalRepository();
-    this.room_rep = getRoomRepository();
+    this.hospital_rep = getHospitalRepository("good");
+    this.room_rep = getRoomRepository("good");
   }
 
   /**
@@ -59,6 +59,7 @@ class PatientService {
   async getRelatedDoctors(patient_id: string): Promise<Array<Doctor> | null> {
 
     try {
+      
       // on recupère la liste des conversations auquelles le patient est participant
       // en recupérant son mot de passe Talk
       const rooms = await this.getRelatedRooms(patient_id);
@@ -66,8 +67,10 @@ class PatientService {
       // on récupère les docteurs réliés à chacune de ces conversations
       const doctors: Array<Doctor> = [];
       for (let i = 0; i < rooms.length; i++) {
-        const doctor = await this.getRelatedDoctor(rooms[i]);
-        doctors.push(doctor);
+        if (rooms[i].name.includes(patient_id)) {
+          const doctor = await this.getRelatedDoctor(rooms[i]);
+          doctors.push(doctor);
+        }
       }
       return doctors;
     } catch (error) {
@@ -81,10 +84,8 @@ class PatientService {
    * @returns 
    */
   async getRelatedRooms(patient_id: string): Promise<Array<Room>> {
-
     // on recupère le mot de passe Talk du patient 
     const password = await this.room_rep.getPasswordUser(patient_id);
-
     // on recupère la liste des conversations auquelles le patient est participant
     return await this.room_rep.getRelatedRooms(patient_id, password);
   }
@@ -100,11 +101,14 @@ class PatientService {
     let names = "";
     id = room.name.split("#")[0];
     names = (await this.hospital_rep.getUser(id)).names;
-
+    
+    const url = await this.getRoomURL(room);
+    
     return {
       id: id,
       names: names,
-      related_room: room
+      related_room: room,
+      url_room: url,
     };
   }
 

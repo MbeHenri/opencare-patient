@@ -8,17 +8,19 @@ import { BadResponse } from "../errors";
 class ProdHospitalRepository extends HospitalRepository {
 
     async getPatientDetail(patient_id: string): Promise<Patient> {
-
+        
+        
         let myHeaders = new Headers();
         myHeaders.append("Authorization", `Basic ${O3_BASE64}`);
-
+        
         let requestOptions = {
             method: 'GET',
             headers: myHeaders,
         };
-
+        
+        //console.log(O3_BASE_URL);
         const result: Patient = await fetch(`${O3_BASE_URL}/patient/${patient_id}?v=full`, requestOptions)
-            .then(response => {
+        .then(response => {
                 if (response.ok) {
                     return response.json()
                 }

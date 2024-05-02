@@ -1,6 +1,5 @@
 import Room from "../../models/Room";
 import User from "../../models/User";
-import { TALK_PASSWORD } from "../env";
 
 class RoomRepository {
 
@@ -30,11 +29,10 @@ class RoomRepository {
     }
 
     async getPasswordUser(user_id: string): Promise<string> {
-        return `${TALK_PASSWORD}`;
+        return `TalkPassword`;
     }
 
     async getRoomParticipants(token_room: string): Promise<Array<User>> {
-
         return [];
     }
 

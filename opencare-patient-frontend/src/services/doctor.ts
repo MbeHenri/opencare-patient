@@ -10,7 +10,7 @@ class DoctorService {
     room_rep: RoomRepository;
 
     constructor() {
-        this.room_rep = getRoomRepository();
+        this.room_rep = getRoomRepository("good");
     }
 
     /**

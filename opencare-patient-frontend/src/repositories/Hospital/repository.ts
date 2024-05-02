@@ -4,7 +4,6 @@ import User from "../../models/User";
 class HospitalRepository {
 
     async getPatientDetail(patient_id: string): Promise<Patient> {
-
         return {
             o3_id: "44588",
             names: "Sarah Taylor",

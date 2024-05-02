@@ -102,8 +102,7 @@ class ProdRoomRepository extends RoomRepository {
     }
 
 
-    async getRelatedRooms(user_id: string, password: string): Promise<Array<Room>> {
-
+    async getRelatedRooms(user_id: string, password: string): Promise<Array<Room>> {  
         var myHeaders = new Headers();
         myHeaders.append("OCS-APIRequest", "true");
         myHeaders.append("Accept", "application/json");
@@ -116,7 +115,6 @@ class ProdRoomRepository extends RoomRepository {
         };
 
         let rooms: Array<Room> = [];
-
         await fetch(`${TALK_BASE_URL}/room`, requestOptions)
             .then(response => {
                 if (response.ok) {
@@ -135,7 +133,6 @@ class ProdRoomRepository extends RoomRepository {
                     })
                 });
             });
-
         return rooms;
     }
 
