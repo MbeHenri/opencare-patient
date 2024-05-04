@@ -102,7 +102,7 @@ class ProdRoomRepository extends RoomRepository {
     }
 
 
-    async getRelatedRooms(user_id: string, password: string): Promise<Array<Room>> {  
+    async getRelatedRooms(user_id: string, password: string): Promise<Array<Room>> {
         var myHeaders = new Headers();
         myHeaders.append("OCS-APIRequest", "true");
         myHeaders.append("Accept", "application/json");
@@ -210,6 +210,32 @@ class ProdRoomRepository extends RoomRepository {
             });
 
         return participants;
+    }
+
+    async addRoomParticipant(user_id: string, token_room: string): Promise<void> {
+
+        const myHeaders = new Headers();
+        myHeaders.append("OCS-APIRequest", "true");
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Basic ${TALK_BASE64}}`);
+
+        const formdata = new FormData();
+        formdata.append("newParticipant", user_id);
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+
+        await fetch(`${TALK_BASE_URL}/room/${token_room}/participants`, requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new BadResponse()
+            })
+
     }
 }
 
