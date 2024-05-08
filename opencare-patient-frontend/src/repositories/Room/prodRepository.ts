@@ -1,4 +1,4 @@
-import { NC_BASE_URL, TALK_BASE64, TALK_BASE_URL } from "../env";
+import { NC_BASE_URL, TALK_BASE64, TALK_BASE_PASSWORD, TALK_BASE_URL } from "../env";
 import Room from "../../models/Room";
 import { base64 } from "../../utils";
 import RoomRepository from "./repository";
@@ -236,6 +236,10 @@ class ProdRoomRepository extends RoomRepository {
                 throw new BadResponse()
             })
 
+    }
+    
+    async getPasswordUser(user_id: string): Promise<string> {
+        return `${TALK_BASE_PASSWORD}`;
     }
 }
 
