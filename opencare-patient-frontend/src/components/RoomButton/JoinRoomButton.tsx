@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { useState } from "react";
-import DoctorService from "../../services/doctor";
 import Room from "../../models/Room";
+import PatientService from "../../services/patient";
 
 interface Props {
   room: Room;
@@ -16,7 +16,7 @@ const JoinRoomButton: React.FC<Props> = ({
 }) => {
   const [loading, setLoading] = useState(false);
 
-  const service = useMemo(() => DoctorService.getInstance(), []);
+  const service = useMemo(() => PatientService.getInstance(), []);
 
   const handleClick = useCallback(async () => {
     try {
