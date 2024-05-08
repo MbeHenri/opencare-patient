@@ -13,7 +13,7 @@ export const O3_BASE64 = base64(`${O3_USER}:${O3_PASSWORD}`);
 // Talk env variables
 export const TALK_USER = process.env.REACT_APP_TALK_USER;
 export const TALK_PASSWORD = process.env.REACT_APP_TALK_PASSWORD;
-export const TALK_PORT = process.env.REACT_APP_TALK_POST;
+export const TALK_PORT = process.env.REACT_APP_TALK_PORT;
 export const TALK_HOST = process.env.REACT_APP_TALK_PASSWORD;
 
 export const TALK_BASE64 = base64(`${TALK_USER}:${TALK_PASSWORD}`);
