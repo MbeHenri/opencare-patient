@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Patient = require("./models/Patient");
-const { port, FRONTEND, dbURI } = require("./config");
+const { port, FRONTEND, dbURI, key_token } = require("./config");
 
 const app = express();
 const PORT = port;
@@ -51,7 +51,7 @@ app.post("/login", (req, res) => {
         };
         jwt.sign(
           payload,
-          "opencare-token",
+          key_token,
           {
             expiresIn: "1hr",
           },
