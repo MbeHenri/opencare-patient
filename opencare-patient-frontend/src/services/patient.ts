@@ -1,6 +1,7 @@
 import Doctor from "../models/Doctor";
 import Patient from "../models/Patient";
 import Room from "../models/Room";
+import Visit from "../models/Visit";
 import { getHospitalRepository } from "../repositories/Hospital";
 import HospitalRepository from "../repositories/Hospital/repository";
 import { getRoomRepository } from "../repositories/Room";
@@ -59,7 +60,7 @@ class PatientService {
   async getRelatedDoctors(patient_id: string): Promise<Array<Doctor> | null> {
 
     try {
-      
+
       // on recupère la liste des conversations auquelles le patient est participant
       // en recupérant son mot de passe Talk
       const rooms = await this.getRelatedRooms(patient_id);
@@ -100,10 +101,10 @@ class PatientService {
     let id = "";
     let names = "";
     id = room.name.split("#")[0];
-    names = (await this.hospital_rep.getUser(id)).names;
-    
+    names = (await this.hospital_rep.getDoctor(id)).names;
+
     const url = await this.getRoomURL(room);
-    
+
     return {
       id: id,
       names: names,
@@ -120,6 +121,19 @@ class PatientService {
   async getPatient(patient_id: string): Promise<Patient | null> {
     try {
       return await this.hospital_rep.getPatientDetail(patient_id);
+    } catch (error) {
+      return null
+    }
+  }
+
+  /**
+   * get visits related of a patient
+   * @param patient_id patient app identifier of a patient
+   * @returns 
+   */
+  async getVisits(patient_id: string): Promise<Array<Visit> | null> {
+    try {
+      return await this.hospital_rep.getVisits(patient_id);
     } catch (error) {
       return null
     }

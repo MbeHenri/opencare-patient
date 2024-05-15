@@ -1,5 +1,6 @@
 import Patient from "../../models/Patient";
 import User from "../../models/User";
+import Visit from "../../models/Visit";
 
 class HospitalRepository {
 
@@ -20,6 +21,18 @@ class HospitalRepository {
             id: "454588",
             names: "Jake Doctor",
         };
+    }
+    
+    async getDoctor(person_id: string): Promise<User> {
+
+        return {
+            id: "454588",
+            names: "Jake Doctor",
+        };
+    }
+    
+    async getVisits(patient_id: string): Promise<Array<Visit>> {
+        return [];
     }
 }
 
