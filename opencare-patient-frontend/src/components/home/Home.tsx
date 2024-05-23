@@ -1,101 +1,72 @@
-import React, { useCallback, useEffect, useState } from "react";
-/* import PatientService from "../../services/patient";
-import Doctor from "../../models/Doctor";
-import JoinRoomButton from "../RoomButton/JoinRoomButton";
-import Patient from "../../models/Patient"; */
-import RoomButton from "../RoomButton";
-import PatientService from "../../services/patient";
-import Patient from "../../models/Patient";
-import Doctor from "../../models/Doctor";
-//import { useNavigate } from "react-router-dom";
+import React from "react";
+import Header from "../header/Header";
+import Footer from "../footer/Footer";
+import Login from "../login/Login";
+import Specialite from "../specialite/Specialite";
+import Medecin from "../medecin/Medecin";
+import Contact from "../contact/Contact";
+import "./Home.css";
+import Bloc2 from "../bloc2/Bloc2";
 
 function Home() {
-  /*   const patient_service = useMemo(() => {
-    return PatientService.getInstance();
-  }, []); */
-
-  const [url, setUrl] = useState("");
-
-  /*   const patient: Patient = {
-    o3_id: "44588",
-    names: "Sarah Taylor",
-    gender: "F",
-    age: 61,
-    birthdate: new Date("1962-09-09T00:00:00.000+0000"),
-    birthdateEstimated: false,
-  }; */
-
-  const o3_id = "f91940a8-bd8e-495b-8cbf-2a01da8ec8e9";
-  const patient_service = PatientService.getInstance();
-  const [patientDetails, setPatientDetails] = useState<Patient | null>(null);
-  const [doctors, setDoctors] = useState<Array<Doctor> | null>(null);
-
-  useEffect(() => {
-    const func = async () => {
-      await patient_service.getPatient(o3_id).then((patient) => {
-        setPatientDetails(patient);
-      });
-      await patient_service.getRelatedDoctors(o3_id).then((doctors) => {
-        setDoctors(doctors);
-      });
-    };
-    func();
-    return () => {};
-  }, []);
-  
-  const handleClick = useCallback(
-    (url:string) => {
-      setUrl(url)
-    },
-    [],
-  )
-  
   return (
-    <div className="container">
-      <h2 className="text-center text-white mt-5">Home page</h2>
-      <div className="row">{JSON.stringify(patientDetails)}</div>
-      <br />
-      <div className="row">{JSON.stringify(doctors)}</div>
+    <>
+      <Header />
+      <div className="container font-family-sans-serif" id="home_container">
+        <div className="bd-example m-0 border-0 bg-blue-500 py-4 text-white">
+          <div className="row">
+            <div className="col-md-6 ps-5">
+              <h1 className="my-0">Plateforme de santé</h1>
+              <h2 className="text-uppercase mb-5 display-3 my-0 py-0">
+                numérique
+              </h2>
+              <h2 className="my-0 py-0">de la Royal Clinique</h2>
+              <h4 className="my-5">
+                Consultez votre médécin à distance en toute sérénité
+              </h4>
+              <p className="my-5">
+                Connexion entre différents acteurs de la santé. Médécins,
+                patients, hôpital et pharmacies
+              </p>
+            </div>
+            <div className="col-md-6">
+              <img src="/opencare/Cycle.png" alt="" width="80%" />
+            </div>
+          </div>
+        </div>
 
-      <div className="row">
-        <div className="col-md-6">
-          <h4 className="text-white my-4">Liste des rendez-vous</h4>
-          <table className="table table-sm table-striped">
-            <thead>
-              <tr className="text-white">
-                <th>#</th>
-                <th>Nom - prénom</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-            
-              {
-                doctors ? doctors.map((doctor) => {
-                  
-                  return <tr className="text-white">
-                  <td>
-                    <b>1</b>
-                  </td>
-                  <td>{doctor.names}</td>
-                  <td>
-                    <RoomButton
-                      doctor={doctor}
-                      callback={handleClick}
-                    />
-                  </td>
-                </tr>
-                }) : <p>Loading ... </p>
-              }
-              
-            </tbody>
-          </table>
+        {/*<div className="bd-example m-0 border-0">
+        <svg
+          className="bd-placeholder-img bd-placeholder-img-lg img-fluid bg-blue-400"
+          width="100%"
+          height="480"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="Placeholder: Responsive image"
+          preserveAspectRatio="xMidYMid slice"
+          focusable="false"
+        >
+          <title>Placeholder</title>
+          <rect width="100%" height="100%" fill="#0d6efd" />
+          <text x="50%" y="50%" fill="#dee2e6" dy=".3em">
+            OpenCare
+          </text>
+        </svg>
+      </div>*/}
+        <div className="row bg-secondary py-2 text-white bd-example m-0 border-0">
+          <p className="text-center">
+            Accédez à la plateforme via votre ordinateur et votre téléphone
+          </p>
         </div>
-        <div className="col-md-6">
-          <iframe src={url} width="100%" height="500px" title="Room"></iframe>
+        <div className="row">
+          <Login />
         </div>
+        <Specialite />
+        <Bloc2 />
+        <Contact />
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
 

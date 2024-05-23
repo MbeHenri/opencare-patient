@@ -1,0 +1,8 @@
+#contact_form {
+  background: linear-gradient(to bottom, #009eff 75%, white 25% 50%);
+}
+
+.btn-primary {
+  background-color: #009eff !important;
+  color: white;
+}

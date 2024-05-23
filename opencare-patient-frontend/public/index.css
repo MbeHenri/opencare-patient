@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "opencare";
+  src: url("/public/fonts/caviar_dreams/CaviarDreams.ttf"),
+    url("/public/fonts/caviar_dreams/CaviarDreams_Bold.ttf"),
+    url("/public/fonts/caviar_dreams/CaviarDreams_BoldItalic.ttf"),
+    url("/public/fonts/caviar_dreams/CaviarDreams_Italic.ttf");
+}
+
+body {
+  font-family: "opencare";
+  background-color: "red";
+}
