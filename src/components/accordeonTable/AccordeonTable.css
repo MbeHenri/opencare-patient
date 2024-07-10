@@ -1,0 +1,25 @@
+.accordion-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.accordion-table th,
+.accordion-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.accordion-table th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+
+.details-row {
+  background-color: #f9f9f9;
+}
+
+.details-content {
+  padding: 16px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}

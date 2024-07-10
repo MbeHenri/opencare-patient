@@ -1,0 +1,13 @@
+.liste {
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.centered2 {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translate(-110%, -50%);
+  font-size: 14px;
+}

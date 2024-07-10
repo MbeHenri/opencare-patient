@@ -1,0 +1,8 @@
+@font-face {
+  font-family: caviar_dreams;
+  src: url("../public/fonts/caviar_dreams/CaviarDreams.ttf");
+}
+
+.caviar_dreams {
+  font-family: caviar_dreams;
+}
