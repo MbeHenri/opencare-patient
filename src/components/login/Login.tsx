@@ -39,8 +39,9 @@ function Login() {
             <h1 className="text-center">Téléconsultation avec un médécin</h1>
             <div className="row align-items-center g-lg-5 py-5">
               <div className="col-md-6 d-flex align-items-center justify-content-center border rounded-5 bg-blue-400 text-white min-vh-100">
-                <span>Royal clinique</span>
-                <span>Accédez à votre portail</span>
+                <h2 className="text-uppercase text-center">
+                  <strong>Royal clinique</strong>
+                </h2>
               </div>
               <div className="col-md-6 text-center text-lg-start mt-0 pt-0">
                 <div className="list-group">

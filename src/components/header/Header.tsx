@@ -127,6 +127,11 @@ function Header() {
                     Acceuil
                   </a>
                 </li>
+                <li>
+                  <a href="/contact" className="nav-link px-2 text-body">
+                    Contact
+                  </a>
+                </li>
               </ul>
               <div className="col-md-3">
                 <div className="d-flex align-items-center">

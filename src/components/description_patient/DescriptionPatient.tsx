@@ -36,7 +36,7 @@ function DescriptionPatient() {
               names: response.data.names,
               gender: response.data.gender,
               age: response.data.age,
-              birthdate: formattedDate(new Date(response.data.birthdate)),
+              birthdate: formatDate(new Date(response.data.birthdate)),
             };
             setPatientDetails(details);
           }
@@ -48,6 +48,39 @@ function DescriptionPatient() {
     func();
     return () => {};
   }, [O3ID]);
+
+  const formatDate = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    };
+
+    // crée un tableau de mois personnalisés
+    const monthNames: { [key: string]: string } = {
+      "janv.": "Janvier",
+      "févr.": "Février",
+      mars: "Mars",
+      "avr.": "Avril",
+      mai: "Mai",
+      juin: "Juin",
+      "juil.": "Juillet",
+      août: "Août",
+      "sept.": "Septembre",
+      "oct.": "Octobre",
+      "nov.": "Novembre",
+      "dec.": "Decembre",
+    };
+
+    // Formate la date en utilisant les options définies
+    const formattedDate = date.toLocaleDateString("fr-FR", options);
+
+    // Remplace le mois abrégé en anglais par le mois abrégé en Français
+    const [day, month, year] = formattedDate.split(" ");
+    const formattedMonth = monthNames[month as keyof typeof monthNames];
+
+    return `${day} / ${formattedMonth} / ${year}`;
+  };
 
   const formattedDate = (date: Date): string => {
     const months = [
@@ -95,7 +128,7 @@ function DescriptionPatient() {
     <>
       {patientDetails ? (
         <div className="d-flex align-items-left">
-          <img src="/opencare/img_profil.png" alt="" width="150" height="150" />
+          <img src="/opencare/profil.png" alt="" width="150" height="150" />
           <div className="mt-2">
             <h3>{patientDetails.names}</h3>
             <h5>{patientDetails.gender}</h5>
@@ -106,7 +139,7 @@ function DescriptionPatient() {
         </div>
       ) : (
         <div className="d-flex align-items-left">
-          <img src="/opencare/img_profil.png" alt="" width="150" height="150" />
+          <img src="/opencare/profil.png" alt="" width="150" height="150" />
           <div className="mt-2">
             <h3>Patient inconnu</h3>
           </div>

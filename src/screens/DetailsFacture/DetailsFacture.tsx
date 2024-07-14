@@ -14,12 +14,10 @@ interface Invoice {
 
 function DetailsFacture() {
   const navigate = useNavigate();
-  const { demande_id } = useParams();
+  const { appointment_uuid, idInvoice, service_name } = useParams();
   const { user } = useAuth();
   const [O3ID, setO3ID] = useState("");
-  const [invoiceID, setInvoiceID] = useState("");
-  const [service, setService] = useState("");
-  const [uuidAppointment, setUuidAppointment] = useState("");
+  const [noFacture, setNoFacture] = useState("");
   const [invoice, setInvoice] = useState<Invoice[]>([]);
 
   useEffect(() => {
@@ -30,33 +28,15 @@ function DetailsFacture() {
   }, [user]);
 
   useEffect(() => {
-    const func = async () => {
-      await api
-        .get(`/appointment/${demande_id}/details`)
-        .then(function (response) {
-          if (response.status === 200) {
-            setInvoiceID(response.data.idInvoice);
-            setService(response.data.service_name);
-            setUuidAppointment(response.data.uuidAppointment);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-    func();
-    return () => {};
-  }, [demande_id]);
-
-  useEffect(() => {
     const facture: Invoice[] = [];
     const func = async () => {
       await api
-        .get(`/invoice/${invoiceID}`)
+        .get(`/invoice/${idInvoice}`)
         .then(function (response) {
           if (response.status === 200) {
+            setNoFacture(response.data.facture_name);
             facture.push({
-              service: service,
+              service: "",
               amount_residual: response.data.amount_residual,
               amount_total: response.data.amount_total,
               currency: response.data.currency,
@@ -72,31 +52,31 @@ function DetailsFacture() {
     };
     func();
     return () => {};
-  }, [invoiceID, service]);
+  }, [idInvoice]);
 
   const handlePayement = () => {
-    navigate(`/paiement/${uuidAppointment}`);
+    navigate(`/paiement/${appointment_uuid}`);
   };
 
   return (
     <div className="container caviar_dreams">
-      <h2>Détails de votre facture</h2>
+      <h2>Détails de votre facture&nbsp;{noFacture}</h2>
       {invoice.map((item) => (
         <>
           <p>
             <strong>Service:</strong>
-            &nbsp;{item.service}
+            &nbsp;&nbsp;{service_name}
           </p>
           <p>
-            <strong>Montant résiduel:</strong>
+            <strong>Montant résiduel:</strong>&nbsp;&nbsp;
             {item.amount_residual}&nbsp;{item.currency}
           </p>
           <p>
-            <strong>Montant total:</strong>
+            <strong>Montant total:</strong>&nbsp;&nbsp;
             {item.amount_total}&nbsp;{item.currency}
           </p>
           <p>
-            <strong>Etat:</strong>&nbsp;
+            <strong>Etat:</strong>&nbsp;&nbsp;
             {item.state}
           </p>
           <br />

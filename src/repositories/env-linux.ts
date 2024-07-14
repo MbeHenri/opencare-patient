@@ -10,10 +10,10 @@ const O3_HOST = process.env.REACT_APP_O3_HOST;*/
 const O3_USER = "admin";
 const O3_PASSWORD = "Admin123";
 const O3_PORT = "80";
-const O3_HOST = "192.168.0.10";
-//const O3_HOST = "localhost";
+const O3_HOST = "localhost";
 
-console.log(O3_HOST);
+//online
+//const O3_HOST = "192.168.0.10";
 
 export const O3_BASE_SECURE_URL = `https://${O3_HOST}:${O3_PORT}/openmrs/ws/rest/v1`;
 export const O3_BASE_URL = `http://${O3_HOST}:${O3_PORT}/openmrs/ws/rest/v1`;

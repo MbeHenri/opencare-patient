@@ -57,7 +57,7 @@ function App() {
             }
           />
           <Route
-            path="/teleconsultation"
+            path="/teleconsultation/:url"
             element={
               <ProtectedRoute>
                 <Teleconsultation />
@@ -185,7 +185,7 @@ function App() {
             }
           />
           <Route
-            path="/details_invoice/:demande_id"
+            path="/details_invoice/:appointment_uuid/:idInvoice/:service_name"
             element={
               <ProtectedRoute>
                 <DetailsFacture />

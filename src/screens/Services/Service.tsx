@@ -36,7 +36,6 @@ function Service() {
         .get(`/service`)
         .then((response) => {
           if (response.status === 200) {
-            //console.log(response.data.results);
             setServices(response.data.results);
           }
         })
@@ -73,7 +72,7 @@ function Service() {
             </h2>
             <hr className="mb-5" />
           </div>
-          <div className="row my-4">
+          {/*<div className="row my-4">
             <div className="col-md-4">
               <p>Filtre</p>
             </div>
@@ -85,7 +84,7 @@ function Service() {
                 </h5>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row">
             {services.map((service) => (
               <div className="col-md-3 col-sm-6 col-lg-3" key={service.uuid}>
@@ -93,18 +92,20 @@ function Service() {
                   <div className="row g-0 bg-blue-400 text-white rounded-4 pb-0">
                     <div className="col-md-4">
                       <img
-                        src="/opencare/img_hopital.png"
+                        src="/opencare/hopital.png"
                         alt=""
                         className="img-fluid mt-4"
                       />
                     </div>
                     <div className="col-md-8">
-                      <div className="card-body text-end">
-                        <h4 className="card-title">{service.name}</h4>
-                        <p className="my-0 card-text">
+                      <div className="card-body">
+                        <h4 className="card-title text-sm">{service.name}</h4>
+                        <p className="my-0 card-text text-end">
                           Côut de la consultation
                         </p>
-                        <h5 className="card-title">{service.price} FCFA</h5>
+                        <h5 className="card-title text-end">
+                          {service.price} FCFA
+                        </h5>
                         <p>
                           <button
                             className="btn btn-light btn-sm rounded-4 text-primary py-2"

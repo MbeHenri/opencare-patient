@@ -7,14 +7,12 @@ import DescriptionPatient from "../../components/description_patient/Description
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 
+const PROCESSING = 2;
+
 interface Service {
   uuid: string;
   service: string;
   price: number;
-}
-
-interface PageParams {
-  uuid: string;
 }
 
 function DemandeService() {
@@ -35,18 +33,15 @@ function DemandeService() {
 
   useEffect(() => {
     const func = async () => {
-      ///demand/patientRDV/${O3ID}
-      //.get(`patient/${O3ID}/demand`, { params: { patient_id: O3ID } })
       await api
-        .get(`patient/${O3ID}/demand`)
+        .get(`patient/${O3ID}/demand?status=${PROCESSING}`)
         .then(function (response) {
           if (response.status === 200) {
             const data = response.data.results;
+            //console.log(data);
             data.forEach((element: any) => {
-              if (element.status === "2") {
-                setRequest(data);
-                setIsLoading(true);
-              }
+              setRequest(data);
+              setIsLoading(true);
             });
           }
         })
@@ -233,7 +228,8 @@ function DemandeService() {
                   <tr>
                     <td colSpan={4}>
                       <h5>
-                        Aucunde demnande en attente de validaion trouvée...
+                        Aucune demande de service en attente de validation
+                        trouvée...
                       </h5>
                     </td>
                   </tr>

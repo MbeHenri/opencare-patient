@@ -4,12 +4,10 @@ import DoctorService from "../../service/doctor";
 import Room from "../../models/Room";
 
 interface Props {
-  room: Room;
   callback: Function;
 }
 
 const JoinRoomButton: React.FC<Props> = ({
-  room,
   callback = (url: string) => {
     window.open(url);
   },
@@ -21,15 +19,13 @@ const JoinRoomButton: React.FC<Props> = ({
   const handleClick = useCallback(async () => {
     try {
       setLoading(true);
-      await service
-        .getRoomURL(room)
-        .then((url) => callback(url))
-        .then(() => setLoading(false));
+      //await service.getRelatedRoom()
+      //await service.then((url) => callback(url)).then(() => setLoading(false));
     } catch (error) {
       setLoading(false);
       console.log(error);
     }
-  }, [callback, room, service]);
+  }, [callback, service]);
 
   return (
     <>

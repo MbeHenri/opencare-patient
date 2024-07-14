@@ -1,9 +1,7 @@
 import axios from "axios";
 import { User } from "../types/user";
 
-const OPENCARE_SWITCH = process.env.OPENCARE_SERVER;
-
-const API_URL = "http://doctor.backbone-corp.com:8013/api";
+const API_URL = "http://192.168.0.11:8013/api";
 
 /*const OPENCARE_SERVER = process.env.OPENCARE_SERVER;
 const API_URL = `https//${OPENCARE_SERVER}/api`;*/

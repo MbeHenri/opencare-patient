@@ -78,11 +78,20 @@ function Paiement() {
       await api
         .put(`/appointment/${uuidAppointment}/pay`, {})
         .then((response) => {
-          console.log(response);
+          if (response.status === 201 || response.status === 202) {
+            //console.log(response);
+            alert("Le paiement a été effectué avec succès");
+            navigate(`/patient_appointement`);
+          }
         })
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      alert(
+        "Une erreur est survenue lors du paiement de votre facture. Veillez ressayer."
+      );
+      return;
     }
   };
 

@@ -60,22 +60,26 @@ function Bloc2() {
             </div>
             <p className="">
               <img
-                src="/opencare/img_medecin.png"
+                src="/opencare/medecin.png"
                 alt="twbs"
                 width="180"
                 height="32"
                 className="img-fluid mx-auto d-block"
               />
             </p>
-            <p className="">
-              <a href="">
-                <img
+            <p className="text-center my-3">
+              <a
+                href="http://doctor.backbone-corp.com"
+                className="btn btn-info"
+              >
+                {/*<img
                   src="/opencare/Bouton_cliquez_ici.png"
                   alt="twbs"
                   width="180"
                   height="32"
                   className="img-fluid mx-auto d-block"
-                />
+                />*/}
+                Cliquez ici
               </a>
             </p>
           </div>
