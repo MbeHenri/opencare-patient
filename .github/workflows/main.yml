@@ -42,5 +42,5 @@ jobs:
         PASS: ${{ secrets.VM_PWD }}
         
       # Compilation du Code de Patient    
-      run: sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd opencare-patient && npm install --force && npm run build'
+      run: sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd opencare-patient && npm install --force && npm run build && docker restart opencare-frontend-1'
     
