@@ -33,7 +33,7 @@ jobs:
         
       # Déploiement du Portail Patient
       # run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ ${USER}@${HOST}:~/opencare-patient/
-        run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ${USER}@${HOST}:~/opencare-patient/
+      run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ${USER}@${HOST}:~/opencare-patient/
  
     #- name: Build React App on VM-Patient
     #  env:
