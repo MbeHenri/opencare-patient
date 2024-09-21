@@ -1,0 +1,39 @@
+name: Deploy Patient App to VM-Patient
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.17'
+
+    - name: Install frontend dependencies
+      run: npm install 
+
+    - name: Build React App 
+      run: npm run build
+
+    - name: Install rsync and sshpass
+      run: sudo apt-get update && sudo apt-get install rsync sshpass
+
+    - name: Deploy to EC2
+      env:
+        HOST: ${{ secrets.VM_HOST }}
+        USER: ${{ secrets.VM_USER }}
+        PASS: ${{ secrets.VM_PWD }}
+      run: |
+        # Déploiement du frontend
+        sshpass -p "$PASS" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${USER}@${HOST}:~/opencare-patient/
+        
+        # Redémarrage du frontend
+        # sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'docker restart prodcard-frontend-1'
+    
