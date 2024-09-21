@@ -10,33 +10,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '21.7.2'
     
-    - name: Install Yarn
-      run: npm install -g yarn
-      
-    - name: Install App Dependencies
-      run: yarn install --frozen-lockfile
-   
-    - name: Build React App 
-      run: yarn build
-
     - name: Install rsync and sshpass
       run: sudo apt-get update && sudo apt-get install rsync sshpass
 
-    - name: Deploy to EC2
+    - name: Deploy to VM-Patient
       env:
         HOST: ${{ secrets.VM_HOST }}
         USER: ${{ secrets.VM_USER }}
         PASS: ${{ secrets.VM_PWD }}
-      run: |
-        # Déploiement du frontend
-        sshpass -p "$PASS" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${USER}@${HOST}:~/opencare-patient/
         
-        # Redémarrage du frontend
-        # sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'docker restart prodcard-frontend-1'
+      # Déploiement du Portail Patient
+      run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ ${USER}@${HOST}:~/opencare-patient/
+
+     # Compilation du Code de Patient 
+    - name: Build React App on VM-Patient    
+      run: sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd opencare-patient && npm run build'
     
