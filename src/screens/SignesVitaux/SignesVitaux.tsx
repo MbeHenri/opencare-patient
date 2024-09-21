@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import DescriptionPatient from "../../components/description_patient/DescriptionPatient";
+import { useTranslation } from "react-i18next";
+import Onglets from "../../components/onglets/Onglets";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
+import { format, parseISO } from "date-fns";
+import { Container } from "react-bootstrap";
 
 interface Observation {
   date: string;
@@ -19,11 +21,51 @@ interface Observation {
 }
 
 function SignesVitaux() {
-  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [O3ID, setO3ID] = useState("");
-
   const [observations, setObservations] = useState<Observation[]>([]);
+
+  //const [filterText, setFilterText] = useState("");
+  //const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  //const [showAlert, setShowAlert] = useState(false);
+
+
+  /*const filteredItems = data.filter(
+    (item) =>
+      item.specialite &&
+      item.specialite.toLowerCase().includes(filterText.toLowerCase())
+  );*/
+
+  /*const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText("");
+      }
+    };
+
+    return (
+      <Form className="d-flex">
+        <Form.Control
+          type="text"
+          placeholder="Filtrer par spécialité"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          className="me-2"
+        />
+        <Button variant="secondary" onClick={handleClear}>
+          Clear
+        </Button>
+      </Form>
+    );
+  }, [filterText, resetPaginationToggle]);*/
+
+  const handleRdvRequest = (row: any) => {
+    // Logique pour gérer la demande de RDV
+    //setShowAlert(true);
+    //setTimeout(() => setShowAlert(false), 3000);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -33,23 +75,25 @@ function SignesVitaux() {
   }, [user]);
 
   useEffect(() => {
-    const fetchObservations = async () => {
-      await api
-        .get(`/patient/${O3ID}/observation`)
-        .then((response) => {
-          if (response.status === 200) {
-            const obsArray = response.data?.results.map(
-              (entry: any) => entry.resource
-            );
-            const extracted = extractObservations(obsArray);
-            setObservations(extracted);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-    fetchObservations();
+    if (O3ID) {
+      const fetchObservations = async () => {
+        await api
+          .get(`/patient/${O3ID}/observation`)
+          .then((response) => {
+            if (response.status === 200) {
+              const obsArray = response.data?.results.map(
+                (entry: any) => entry.resource
+              );
+              const extracted = extractObservations(obsArray);
+              setObservations(extracted);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
+      fetchObservations();
+    }
     return () => {};
   }, [O3ID]);
 
@@ -57,11 +101,11 @@ function SignesVitaux() {
     const groupedObservations: { [key: string]: Observation } = {};
 
     observations.forEach((obs) => {
-      const date = formattedDate(new Date(obs.effectiveDateTime));
+      const date = getFormattedDateFR(new Date(obs.effectiveDateTime));
 
       if (!groupedObservations[date]) {
         groupedObservations[date] = {
-          date: date,
+          date: obs.effectiveDateTime,
           temperature: null,
           bloodPressureSystolic: null,
           bloodPressureDiastolic: null,
@@ -129,7 +173,7 @@ function SignesVitaux() {
     return Object.values(groupedObservations);
   };
 
-  const formattedDate = (date: Date): string => {
+  const getFormattedDateFR = (date: Date): string => {
     const months = [
       "Janvier",
       "Février",
@@ -155,220 +199,141 @@ function SignesVitaux() {
     return `${day} ${month} ${year}, ${hours}:${minutes}`;
   };
 
-  const handleClick = (e: any) => {
-    const value = e.target.id;
-    if (value === "signes_vitaux") {
-      navigate("/signes_vitaux");
-    }
-    if (value === "medicamentation") {
-      navigate("/medicamentation");
-    }
-    if (value === "medicamentation") {
-      navigate("/medicamentation");
-    }
-    if (value === "visite") {
-      navigate("/visite");
-    }
-    if (value === "visionneuse") {
-      navigate("/visionneuse");
-    }
-    if (value === "allergie") {
-      navigate("/allergie");
-    }
-    if (value === "condition") {
-      navigate("/condition");
-    }
-    if (value === "immunisation") {
-      navigate("/immunisation");
-    }
-    if (value === "pieces_jointes") {
-      navigate("/pieces_jointes");
-    }
-    if (value === "programme") {
-      navigate("/programme");
-    }
-    if (value === "patient_appointement") {
-      navigate("/patient_appointement");
-    }
-    if (value === "demande_service") {
-      navigate("/demande_service");
-    }
+  const getFormattedDateEN = (date: string): string => {
+    const isoDateString = "1976-01-01T00:00:00.00Z"; // Exemple de date ISO
+
+    // Parse la date ISO en objet Date
+    const parsedDate = parseISO(date);
+
+    // Formatte la date en utilisant le format anglais
+    const englishDate = format(parsedDate, "MMMM dd, yyyy, hh:mm a");
+
+    return englishDate;
   };
 
   return (
     <>
+      <Container className="flex-grow-1">
+        {/*<DataTable
+          columns={columns}
+          data={filteredItems}
+          pagination
+          paginationResetDefaultPage={resetPaginationToggle}
+          subHeader
+          subHeaderComponent={subHeaderComponentMemo}
+          persistTableHead
+        />*/}
+      </Container>
+
       {user ? (
-        <div className="container caviar_dreams">
+        <Container fluid>
           <div className="row">
             <h2 className="text-center mt-4 text-blue-400 mb-4">
-              Mon dossier médical
+              {t("dossier-medical")}
             </h2>
           </div>
           <hr className="mb-5" />
-          <div className="row">
-            <div className="btn-group">
-              <button
-                className="btn btn-primary rounded-4 mx-1 p-2"
-                id="signes_vitaux"
-                onClick={handleClick}
-              >
-                Signes vitaux et biométriques
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="medicamentation"
-                onClick={handleClick}
-              >
-                Médicamentations
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="visionneuse"
-                onClick={handleClick}
-              >
-                Visioneuse de résultats
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="visite"
-                onClick={handleClick}
-              >
-                Visites
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="allergie"
-                onClick={handleClick}
-              >
-                Allergies
-              </button>
-            </div>
-          </div>
-          <div className="row my-3">
-            <div className="btn-group">
-              <button
-                className="btn btn-secondary rounded-5 mx-1 p-2"
-                id="condition"
-                onClick={handleClick}
-              >
-                Conditions
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="immunisation"
-                onClick={handleClick}
-              >
-                Immunisations
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="pieces_jointes"
-                onClick={handleClick}
-              >
-                Pièces jointes
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="programme"
-                onClick={handleClick}
-              >
-                Programme
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="patient_appointement"
-                onClick={handleClick}
-              >
-                Rendez-vous
-              </button>
-              <button
-                className="btn btn-secondary rounded-4 mx-1 p-2"
-                id="demande_service"
-                onClick={handleClick}
-              >
-                Demandes de services
-              </button>
-            </div>
-            <hr className="my-5" />
-            <DescriptionPatient />
-          </div>
+          <Onglets O3ID={O3ID} page="vitals" valide={true} />
           <div className="row my-5">
             <h5 className="mb-4">
-              <span className="border-b-4 border-sky-500">Signes vitaux</span>
+              <span className="border-b-4 border-sky-500">
+                {t("vital-page-title1")}
+              </span>
             </h5>
-            <table className="table">
-              <thead className="table-info text-start">
-                <tr>
-                  <th>Date et heure</th>
-                  <th className="text-center">Température (C)</th>
-                  <th className="text-center">Pression sanguine (mmHg)</th>
-                  <th className="text-center">Batement (beats/min)</th>
-                  <th className="text-center">Taux R.</th>
-                  <th className="text-center">SpO2 (%)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {observations.map((obs, index) => (
-                  <tr key={index}>
-                    <td>{obs.date}</td>
-                    <td>{obs.temperature !== null ? obs.temperature : "-"}</td>
-                    <td>
-                      {obs.bloodPressureSystolic !== null &&
-                      obs.bloodPressureDiastolic !== null
-                        ? `${obs.bloodPressureSystolic}/${obs.bloodPressureDiastolic}`
-                        : "-"}
-                    </td>
-                    <td>{obs.pulse !== null ? obs.pulse : "-"}</td>
-                    <td>{obs.respiratoryRate}</td>
-                    <td>{obs.spo2 !== null ? obs.spo2 : "-"}</td>
+            <div className="table-responsive">
+              <table className="table">
+                <thead className="table-info text-start">
+                  <tr>
+                    <th>{t("vital-page-table-td-title1")}</th>
+                    <th className="text-center">
+                      {t("vital-page-table-td-title2")}
+                    </th>
+                    <th className="text-center">
+                      {t("vital-page-table-td-title3")}
+                    </th>
+                    <th className="text-center">
+                      {t("vital-page-table-td-title4")}
+                    </th>
+                    <th className="text-center">
+                      {t("vital-page-table-td-title5")}
+                    </th>
+                    <th className="text-center">
+                      {t("vital-page-table-td-title6")}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {observations.map((obs, index) => (
+                    <tr key={index}>
+                      {i18n.language === "en" ? (
+                        <td>{getFormattedDateEN(obs.date)}</td>
+                      ) : (
+                        <td>{getFormattedDateFR(new Date(obs.date))}</td>
+                      )}
+                      <td>
+                        {obs.temperature !== null ? obs.temperature : "-"}
+                      </td>
+                      <td>
+                        {obs.bloodPressureSystolic !== null &&
+                        obs.bloodPressureDiastolic !== null
+                          ? `${obs.bloodPressureSystolic}/${obs.bloodPressureDiastolic}`
+                          : "-"}
+                      </td>
+                      <td>{obs.pulse !== null ? obs.pulse : "-"}</td>
+                      <td>{obs.respiratoryRate}</td>
+                      <td>{obs.spo2 !== null ? obs.spo2 : "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
           <div className="row my-5">
             <h5 className="mb-4">
               <span className="border-b-4 border-sky-500">
-                Données biométriques
+                {t("vital-page-title2")}
               </span>
             </h5>
-            <table className="table">
-              <thead className="table-info text-start">
-                <tr>
-                  <th>Date et heure</th>
-                  <th>Poids (Kg)</th>
-                  <th>Taille (cm)</th>
-                  <th>IMC (Kg/m2)</th>
-                  <th>MUAC (cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {observations.map((obs, index) => (
-                  <tr key={index}>
-                    <td>{obs.date}</td>
-                    <td>{obs.weight !== null ? obs.weight : "-"}</td>
-                    <td>{obs.height !== null ? obs.height : "-"}</td>
-                    <td>{obs.bmi !== null ? obs.bmi.toFixed(1) : "-"}</td>
-                    <td>{obs.muac !== null ? obs.muac : "-"}</td>
+            <div className="table-responsive">
+              <table className="table">
+                <thead className="table-info text-start">
+                  <tr>
+                    <th>{t("vital-page-table-td-title1")}</th>
+                    <th>{t("vital-page-table-td-title7")}</th>
+                    <th>{t("vital-page-table-td-title8")}</th>
+                    <th>{t("vital-page-table-td-title9")}</th>
+                    <th>{t("vital-page-table-td-title10")}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {observations.map((obs, index) => (
+                    <tr key={index}>
+                      {i18n.language === "en" ? (
+                        <td>{getFormattedDateEN(obs.date)}</td>
+                      ) : (
+                        <td>{getFormattedDateFR(new Date(obs.date))}</td>
+                      )}
+                      <td>{obs.weight !== null ? obs.weight : "-"}</td>
+                      <td>{obs.height !== null ? obs.height : "-"}</td>
+                      <td>{obs.bmi !== null ? obs.bmi.toFixed(1) : "-"}</td>
+                      <td>{obs.muac !== null ? obs.muac : "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </Container>
       ) : (
-        <div className="container">
+        <Container fluid>
           <div className="row">
             <h2 className="text-center mt-4 text-blue-400 mb-4">
-              Mon dossier médical
+              {t("dossier-medical")}
             </h2>
           </div>
           <hr className="mb-5" />
-          <h6>
-            Vous n'êtes pas connecté. Veillez vous connecter pour accéder à
-            votre dossier médical
-          </h6>
-        </div>
+          <h6>{t("no-authorized")}</h6>
+        </Container>
       )}
     </>
   );

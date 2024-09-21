@@ -1,13 +1,12 @@
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import "./PatientAppointement.css";
-import DescriptionPatient from "../../components/description_patient/DescriptionPatient";
+import Onglets from "../../components/onglets/Onglets";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
-import RoomButton from "../../components/RoomButton";
+import { format, parseISO } from "date-fns";
 
 interface Meeting {
   uuid: string;
@@ -22,11 +21,12 @@ interface Meeting {
   statusPayment: string;
 }
 
-const NOT_PAID = '1';
+const NOT_PAID = "1";
 
 function PatientAppointement() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const [O3ID, setO3ID] = useState("");
 
   const [meetingNotPaid, setMeetingNotPaid] = useState<Meeting[]>([]);
@@ -49,84 +49,87 @@ function PatientAppointement() {
   useEffect(() => {
     //.get(`demand?status=${VALIDATED}`, { params: { patient_id: O3ID } })
     //const meetings: Meeting[] = [];
-    if(O3ID) {
-    	const today_date = new Date();
-    const func = async () => {
-      await api
-        .get(`/patient/${O3ID}/appointment`)
-        .then((response) => {
-          if (response.status === 200) {
-            const data = response.data.results;
-            
-            const incoming: Meeting[] = [];
-            const today: Meeting[] = [];
-            const past: Meeting []= [];
-            const notpaid: Meeting [] = [];
-              
-            data.map((appointment: Meeting) => {
-              const dateMeeting = new Date(appointment.startDateTime);
-              
-              const appt:Meeting = {
-                uuid: appointment.uuid,
-                service: appointment.service,
-                price: appointment.price,
-                startDateTime: getFormattedDate(
+    if (O3ID) {
+      const today_date = new Date();
+      const func = async () => {
+        await api
+          .get(`/patient/${O3ID}/appointment`)
+          .then((response) => {
+            if (response.status === 200) {
+              const data = response.data.results;
 
-                  new Date(appointment.startDateTime)
-                ),
-                endDateTime: getFormattedDate(
-                  new Date(appointment.endDateTime)
-                ),
-                statusProgress: appointment.statusProgress,
-                linkRoom: appointment.linkRoom,
-                patient: appointment.patient,
-                idInvoice: appointment.idInvoice,
-                statusPayment: appointment.statusPayment,
-              };
-              
-              if (appointment.statusPayment === NOT_PAID) {
-              	notpaid.push(appt);
-              } else {
-                if (dateMeeting > today_date) {
-                  incoming.push(appt);
+              const incoming: Meeting[] = [];
+              const today: Meeting[] = [];
+              const past: Meeting[] = [];
+              const notpaid: Meeting[] = [];
+
+              data.map((appointment: Meeting) => {
+                const dateMeeting = new Date(appointment.startDateTime);
+                //const endMeeting = new Date(appointment.endDateTime);
+
+                const appt: Meeting = {
+                  uuid: appointment.uuid,
+                  service: appointment.service,
+                  price: appointment.price,
+                  startDateTime: appointment.startDateTime,
+                  endDateTime: appointment.endDateTime,
+                  statusProgress: appointment.statusProgress,
+                  linkRoom: appointment.linkRoom,
+                  patient: appointment.patient,
+                  idInvoice: appointment.idInvoice,
+                  statusPayment: appointment.statusPayment,
+                };
+
+                if (appointment.statusPayment === NOT_PAID) {
+                  notpaid.push(appt);
                 } else {
-                  if (
-                    dateMeeting.getDay() === today_date.getDay() &&
-                    dateMeeting.getMonth() === today_date.getMonth() &&
-                    dateMeeting.getFullYear() === today_date.getFullYear()
-                  ) {
-                    today.push(appt);
+                  if (dateMeeting > today_date) {
+                    incoming.push(appt);
                   } else {
-                    past.push(appt);
+                    if (
+                      dateMeeting.getDay() === today_date.getDay() &&
+                      dateMeeting.getMonth() === today_date.getMonth() &&
+                      dateMeeting.getFullYear() === today_date.getFullYear()
+                    ) {
+                      /*console.log(
+                        "today Hour",
+                        today_date.getUTCHours(),
+                        "end Hour",
+                        endMeeting.getUTCHours(),
+                        "today Min",
+                        today_date.getUTCMinutes(),
+                        "End Min",
+                        endMeeting.getUTCMinutes()
+                      );*/
+                      today.push(appt);
+                    } else {
+                      past.push(appt);
+                    }
                   }
                 }
-              }
-            });
+              });
 
-            
-            setMeetingNotPaid(notpaid);
-            setIncomingMeeting(incoming);
-            setTodayMeeting(today);
-            setPassedMeeting(past);
-            
+              setMeetingNotPaid(notpaid);
+              setIncomingMeeting(incoming);
+              setTodayMeeting(today);
+              setPassedMeeting(past);
 
-            setIsLoadingIncomming(true);
-            setIsLoadingToday(true);
-
-            setIsLoadingPassed(true);
-            
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-    func();
+              if (notpaid.length !== 0) setIsLoading(true);
+              if (incoming.length !== 0) setIsLoadingIncomming(true);
+              if (today.length !== 0) setIsLoadingToday(true);
+              if (past.length !== 0) setIsLoadingPassed(true);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
+      func();
     }
     return () => {};
   }, [O3ID]);
 
-  const getFormattedDate = (date: Date): string => {
+  const getFormattedDateFR = (date: Date): string => {
     // Options pour formater la date en français
     const dateOptions: Intl.DateTimeFormatOptions = {
       weekday: "long",
@@ -158,6 +161,18 @@ function PatientAppointement() {
     return `${formattedDate} - ${formattedTime}`;
   };
 
+  const getFormattedDateEN = (date: string): string => {
+    //const isoDateString = "1976-01-01T00:00:00.00Z"; // Exemple de date ISO
+
+    // Parse la date ISO en objet Date
+    const parsedDate = parseISO(date);
+
+    // Formatte la date en utilisant le format anglais
+    const englishDate = format(parsedDate, "MMMM dd, yyyy, hh:mm a");
+
+    return englishDate;
+  };
+
   const handlePayement = (
     appointment_uuid: any,
     idInvoice: any,
@@ -169,56 +184,16 @@ function PatientAppointement() {
     );
   };
 
-  const handleClick = (e: any) => {
-    const value = e.target.id;
-    if (value === "signes_vitaux") {
-      navigate("/signes_vitaux");
-    }
-    if (value === "medicamentation") {
-      navigate("/medicamentation");
-    }
-    if (value === "medicamentation") {
-      navigate("/medicamentation");
-    }
-    if (value === "visite") {
-      navigate("/visite");
-    }
-    if (value === "visionneuse") {
-      navigate("/visionneuse");
-    }
-    if (value === "allergie") {
-      navigate("/allergie");
-    }
-    if (value === "condition") {
-      navigate("/condition");
-    }
-    if (value === "immunisation") {
-      navigate("/immunisation");
-    }
-    if (value === "pieces_jointes") {
-      navigate("/pieces_jointes");
-    }
-    if (value === "programme") {
-      navigate("/programme");
-    }
-    if (value === "patient_appointement") {
-      navigate(`/patient_appointement/${O3ID}`);
-    }
-    if (value === "demande_service") {
-      navigate("/demande_service");
-    }
-  };
-
-  const handleValidate = () => {
+  /*const handleValidate = () => {
     const func = async () => {
-      const date_meeting: Date = new Date(2024, 7, 6, 10, 30);
+      const date_meeting: Date = new Date(2024, 6, 15, 21, 37);
 
-      /*date.setFullYear(2024, 6, 25);
-      date.setHours(9);
-      date.setMinutes(30);*/
+      //date.setFullYear(2024, 6, 25);
+      //date.setHours(9);
+      //date.setMinutes(30);
 
       const doctor_id = "705f5791-07a7-44b8-932f-a81f3526fc98"; // uuid provider et pas uuid person
-      const demand_id = "668e296051559ed8d3c956b6";
+      const demand_id = "669386da007a37273bc013c8";
       await api
         .post(`/demand/${demand_id}/validate`, {
           doctor_id: doctor_id,
@@ -236,118 +211,70 @@ function PatientAppointement() {
     };
     func();
     return () => {};
+  };*/
+
+  const getAppointmentStatus = (
+    appointmentDateTime: string,
+    endDateTime: string
+  ): string => {
+    const startDate = new Date(appointmentDateTime);
+    const endDate = new Date(endDateTime);
+    const now = new Date();
+
+    if (now < startDate) {
+      return "Téléconsultation dans quelques instants";
+    } else if (now >= startDate && now <= endDate) {
+      return "Téléconsultation en cours";
+    } else {
+      return "Téléconsultation terminée";
+    }
+  };
+
+  /*const isSameDay = (date1: Date, date2: Date): boolean => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };*/
+
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case "Téléconsultation en cours":
+        return "green";
+      case "Téléconsultation terminée":
+        return "red";
+      case "Téléconsultation dans quelques instants":
+        return "blue";
+      default:
+        return "black";
+    }
   };
 
   const handleTeleconsultation = (linkRoom: any) => {
-    navigate(`/teleconsultation/${linkRoom}`);
+    navigate(`/teleconsultation?url=${encodeURIComponent(linkRoom)}`);
   };
 
   if (!user)
     return (
-      <div className="container caviar_dreams">
-        <h6>
-          Vous n'êtes pas connecté. Veillez vous connecter pour accéder à votre
-          dossier médical
-        </h6>
+      <div className="container-fluid">
+        <h6>{t("no-authorized")}</h6>
       </div>
     );
 
   return (
     <>
-      <div className="container caviar_dreams">
+      <div className="container-fluid">
         <div className="row">
           <h2 className="text-center mt-4 text-blue-400 mb-4">
-            Mon dossier médical
+            {t("dossier-medical")}
           </h2>
         </div>
         <hr className="mb-5" />
-        <div className="row">
-          <div className="btn-group">
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="signes_vitaux"
-              onClick={handleClick}
-            >
-              Signes vitaux et biométriques
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="medicamentation"
-              onClick={handleClick}
-            >
-              Médicamentations
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="visionneuse"
-              onClick={handleClick}
-            >
-              Visioneuse de résultats
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="visite"
-              onClick={handleClick}
-            >
-              Visites
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="allergie"
-              onClick={handleClick}
-            >
-              Allergies
-            </button>
-          </div>
-        </div>
-        <div className="row my-3">
-          <div className="btn-group">
-            <button
-              className="btn btn-secondary rounded-5 mx-1 p-2"
-              id="condition"
-              onClick={handleClick}
-            >
-              Conditions
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="immunisation"
-              onClick={handleClick}
-            >
-              Immunisations
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="pieces_jointes"
-              onClick={handleClick}
-            >
-              Pièces jointes
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="programme"
-              onClick={handleClick}
-            >
-              Programme
-            </button>
-            <button
-              className="btn btn-primary rounded-4 mx-1 p-2"
-              id="patient_appointement"
-              onClick={handleClick}
-            >
-              Rendez-vous
-            </button>
-            <button
-              className="btn btn-secondary rounded-4 mx-1 p-2"
-              id="demande_service"
-              onClick={handleClick}
-            >
-              Demandes de services
-            </button>
-          </div>
-          <hr className="my-5" />
-          <DescriptionPatient />
-        </div>
+        <Onglets O3ID={O3ID} page="rdv" valide={true} />
+        {/*<button className="btn btn-danger my-5" onClick={handleValidate}>
+          Valider les demandes
+        </button>*/}
         <ul className="nav nav-tabs" id="myTab" role="tabList">
           <li className="nav-item" role="presentation">
             <button
@@ -360,7 +287,7 @@ function PatientAppointement() {
               aria-controls="home"
               aria-selected="true"
             >
-              Demandes de RDV en attente de paiement
+              {t("rdv-page-title1")}
             </button>
           </li>
           <li className="nav-item" role="presentation">
@@ -374,7 +301,7 @@ function PatientAppointement() {
               aria-controls="profile"
               aria-selected="false"
             >
-              A venir
+              {t("rdv-page-title2")}
             </button>
           </li>
           <li className="nav-item" role="presentation">
@@ -388,7 +315,7 @@ function PatientAppointement() {
               aria-controls="contact"
               aria-selected="false"
             >
-              Aujourd'hui
+              {t("rdv-page-title3")}
             </button>
           </li>
           <li className="nav-item" role="presentation">
@@ -402,7 +329,7 @@ function PatientAppointement() {
               aria-controls="passe"
               aria-selected="false"
             >
-              Passé
+              {t("rdv-page-title4")}
             </button>
           </li>
         </ul>
@@ -417,23 +344,20 @@ function PatientAppointement() {
             <div className="table-responsive">
               <table className="table mt-2">
                 <thead>
-                  <th>Date prévue pour le RDV</th>
-                  <th>Service</th>
-                  <th>Statut</th>
-                  <th>Note</th>
-                  <th>Action</th>
+                  <th>{t("rdv-page-table-th1")}</th>
+                  <th>{t("rdv-page-table-th2")}</th>
+                  <th>{t("rdv-page-table-th3")}</th>
+                  <th>{t("rdv-page-table-th4")}</th>
+                  <th>{t("rdv-page-table-th5")}</th>
                 </thead>
                 <tbody>
                   {isLoading ? (
                     meetingNotPaid.map((m) => (
                       <tr key={m.uuid}>
-                        <td>Pas encore enregistrée</td>
+                        <td>{t("rdv-page-table-td-title1")}</td>
                         <td>{m.service}</td>
-                        <td>En attente de paiement</td>
-                        <td width={300}>
-                          Cliquez sur le bouton payer le RDV afin de confirmer
-                          votre RDV par l'hôpital
-                        </td>
+                        <td>{t("rdv-page-table-td-title2")}</td>
+                        <td width={300}>{t("rdv-page-table-td-title3")}</td>
                         <td>
                           <button
                             className="mt-3 btn btn-success btn-sm rounded rounded-3"
@@ -441,16 +365,16 @@ function PatientAppointement() {
                               handlePayement(m.uuid, m.idInvoice, m.service)
                             }
                           >
-                            Payer le RDV
+                            {t("rdv-page-table-td-btn-text")}
                           </button>
-                          <h5 className="py-2">{m.price} Fcfa</h5>
+                          <h5 className="py-2">{m.price} XAF</h5>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td colSpan={5}>
-                        <h6>Aucun RDV en attente de paiement trouvé...</h6>
+                        <h6>{t("rdv-page-table-td-title4")}</h6>
                       </td>
                     </tr>
                   )}
@@ -467,28 +391,35 @@ function PatientAppointement() {
             <div className="table-responsive">
               <table className="table mt-2">
                 <thead>
-                  <th>Date prévue pour le RDV</th>
-                  <th className="text-center">Service</th>
-                  <th>Statut</th>
-                  <th className="text-center">Note</th>
+                  <th>{t("rdv-page-table-th1")}</th>
+                  <th className="text-center">{t("rdv-page-table-th2")}</th>
+                  <th>{t("rdv-page-table-th3")}</th>
+                  <th className="text-center">{t("rdv-page-table-th4")}</th>
                 </thead>
                 <tbody>
                   {isLoadingIncoming ? (
                     incomingMeeting.map((m) => (
                       <tr key={m.uuid}>
-                        <td width={300}>{m.startDateTime}</td>
+                        {i18n.language === "en" ? (
+                          <td width={300}>
+                            {getFormattedDateEN(m.startDateTime)}
+                          </td>
+                        ) : (
+                          <td width={300}>
+                            {getFormattedDateFR(new Date(m.startDateTime))}
+                          </td>
+                        )}
                         <td width={200}>{m.service}</td>
-                        <td>Payé</td>
+                        <td>{t("rdv-page-table-td-title5")}</td>
                         <td className="text-center">
-                          Vous êtes enregistré auprès d'un médécin.
-                          Connectez-vous le jour de votre rendez-vous.
+                          {t("rdv-page-table-td-title6")}
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td colSpan={4}>
-                        <h6>Aucun RDV à venir trouvé...</h6>
+                        <h6>{t("rdv-page-table-td-title7")}</h6>
                       </td>
                     </tr>
                   )}
@@ -505,46 +436,52 @@ function PatientAppointement() {
             <div className="table-responsive">
               <table className="table mt-2">
                 <thead>
-                  <th>Date prévue pour le RDV</th>
-                  <th className="text-center">Service</th>
-                  <th>Statut</th>
-                  <th className="text-center">Note</th>
-                  <th>Action</th>
+                  <th>{t("rdv-page-table-th1")}</th>
+                  <th className="text-center">{t("rdv-page-table-th2")}</th>
+                  <th>{t("rdv-page-table-th3")}</th>
+                  <th className="text-center">{t("rdv-page-table-th4")}</th>
+                  <th>{t("rdv-page-table-th5")}</th>
                 </thead>
                 <tbody>
-                  {isLoadingPassed ? (
-                    todayMeeting.map((m) => (
-                      <tr key={m.uuid}>
-                        <td className="text-success">{m.startDateTime}</td>
-                        <td className="text-success">{m.service}</td>
-                        <td className="text-success">Payé</td>
-                        <td className="text-success text-center">
-                          Ne manquez pas à votre RDV aujourd'hui, connectez-vous
-                          à l'heure.
-                        </td>
-                        {new Date(m.endDateTime).getHours() >=
-                          new Date().getHours() &&
-                        new Date(m.endDateTime).getMinutes() >=
-                          new Date().getMinutes() ? (
+                  {isLoadingToday ? (
+                    todayMeeting.map((m) => {
+                      const status = getAppointmentStatus(
+                        m.startDateTime,
+                        m.endDateTime
+                      );
+                      return (
+                        <tr key={m.uuid}>
+                          {i18n.language === "en" ? (
+                            <td className="text-success">
+                              {getFormattedDateEN(m.startDateTime)}
+                            </td>
+                          ) : (
+                            <td className="text-success">
+                              {getFormattedDateFR(new Date(m.startDateTime))}
+                            </td>
+                          )}
+                          <td className="text-success">{m.service}</td>
                           <td className="text-success">
+                            {t("rdv-page-table-td-title8")}
+                          </td>
+                          <td className="text-success text-center">
+                            {t("rdv-page-table-td-title9")}
+                          </td>
+                          <td style={{ color: getStatusColor(status) }}>
                             <button
                               className="btn btn-success"
                               onClick={() => handleTeleconsultation(m.linkRoom)}
                             >
-                              Teleconsultation
+                              {status}
                             </button>
                           </td>
-                        ) : (
-                          <td className="text-success">
-                            La téléconsultation est terminée
-                          </td>
-                        )}
-                      </tr>
-                    ))
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td colSpan={5}>
-                        <h6>Aucun RDV ajourd'hui trouvé...</h6>
+                        <h6>{t("rdv-page-table-td-title10")}</h6>
                       </td>
                     </tr>
                   )}
@@ -561,27 +498,33 @@ function PatientAppointement() {
             <div className="table-responsive">
               <table className="table mt-2">
                 <thead>
-                  <th>Date prévue pour le RDV</th>
-                  <th className="text-center">Service</th>
-                  <th>Statut</th>
-                  <th className="text-center">Note</th>
+                  <th>{t("rdv-page-table-th1")}</th>
+                  <th className="text-center">{t("rdv-page-table-th2")}</th>
+                  <th>{t("rdv-page-table-th3")}</th>
+                  <th className="text-center">{t("rdv-page-table-th4")}</th>
                 </thead>
                 <tbody>
                   {isLoadingPassed ? (
                     passedMeeting.map((m) => (
                       <tr key={m.uuid}>
-                        <td>{m.startDateTime}</td>
+                        {i18n.language === "en" ? (
+                          <td>{getFormattedDateEN(m.startDateTime)}</td>
+                        ) : (
+                          <td>
+                            {getFormattedDateFR(new Date(m.startDateTime))}
+                          </td>
+                        )}
                         <td className="text-center">{m.service}</td>
-                        <td>Payé</td>
+                        <td>{t("rdv-page-table-td-title11")}</td>
                         <td className="text-center">
-                          Votre RDV a déjà eu lieu
+                          {t("rdv-page-table-td-title12")}
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td colSpan={4}>
-                        <h6>Aucun RDV passé trouvé...</h6>
+                        <h6>{t("rdv-page-table-td-title13")}</h6>
                       </td>
                     </tr>
                   )}

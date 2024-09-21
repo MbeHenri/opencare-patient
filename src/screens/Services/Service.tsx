@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../components/header/Header";
 import "./Service.css";
-import Footer from "../../components/footer/Footer";
-import { useNavigate } from "react-router-dom";
-import User from "../../models/User";
+//import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
+import { Card, Col, Row } from "react-bootstrap";
+import { ToastPosition } from 'react-toastify';
+import { ToastNotifications } from "../../components/toastNotifications/ToastNotifications";
 
-interface Service {
+interface ServiceType {
   uuid: string;
   name: string;
   price: number;
 }
 
 function Service() {
-  const { user, logout } = useAuth();
-  //const [userData, setUserData] = useState('');
-  const [userData, setUserData] = useState<User | null>(null);
+  //const navigate = useNavigate();
+  const { user } = useAuth();
+  const { t } = useTranslation();
   const [O3ID, setO3ID] = useState("");
 
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<ServiceType[]>([]);
 
-  const navigate = useNavigate();
+  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info', message: string, position?: ToastPosition } | null>(null);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -31,65 +33,50 @@ function Service() {
   }, [user]);
 
   useEffect(() => {
-    const func = async () => {
-      await api
-        .get(`/service`)
-        .then((response) => {
-          if (response.status === 200) {
-            setServices(response.data.results);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    func();
-    return () => {};
-  }, [user]);
+    if (O3ID) {
+      const func = async () => {
+        await api
+          .get(`/service`)
+          .then((response) => {
+            if (response.status === 200) {
+              setServices(response.data.results);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+      func();
+    }
 
-  const handleClick = async (service_uuid: string) => {
-    console.log(O3ID);
-    await api
-      .post(`/demand/new`, { service_id: service_uuid, patient_id: O3ID })
-      .then((response) => {
-        if (response.status === 201) {
-          navigate(`/demande_service`);
-        }
-        if (response.status === 202) {
-          alert("Cette demande est déjà en attente de validation");
-          return;
-        }
-      });
+    return () => {};
+  }, [O3ID]);
+
+  
+  const handleClick = (service_uuid: string) => {
+    setToast({
+      type: 'success',
+      message: 'Demande envoyée avec succès',
+      position: 'bottom-left' // Choisissez la position ici
+    });
   };
+
 
   return (
     <>
+      <div className="row">
+        <h2 className="text-center mt-4 text-blue-400 mb-4">
+          {t("service-page-title")}
+        </h2>
+        <hr className="mb-5" />
+      </div>
       {user ? (
-        <div className="container">
-          <div className="row">
-            <h2 className="text-center mt-4 text-blue-400 mb-4">
-              Nos services médicaux
-            </h2>
-            <hr className="mb-5" />
-          </div>
-          {/*<div className="row my-4">
-            <div className="col-md-4">
-              <p>Filtre</p>
-            </div>
-            <div className="col-md-8">
-              <div className="alert alert-success text-success">
-                <h5 className="text-center">
-                  Votre demande de rendez-vous a été envoyée à l'hôpital avec
-                  succès.
-                </h5>
-              </div>
-            </div>
-          </div> */}
-          <div className="row">
-            {services.map((service) => (
-              <div className="col-md-3 col-sm-6 col-lg-3" key={service.uuid}>
-                <div className="card rounded-4">
-                  <div className="row g-0 bg-blue-400 text-white rounded-4 pb-0">
+        <Row xs={1} md={2} lg={4} className="g-4">
+          {services.map((service) => (
+            <Col key={service.uuid}>
+              <Card className="text-center h-100 rounded-4">
+                <Card.Body className="g-0 bg-blue-400 text-white rounded-4 pb-0">
+                  <div className="row">
                     <div className="col-md-4">
                       <img
                         src="/opencare/hopital.png"
@@ -98,37 +85,35 @@ function Service() {
                       />
                     </div>
                     <div className="col-md-8">
-                      <div className="card-body">
-                        <h4 className="card-title text-sm">{service.name}</h4>
-                        <p className="my-0 card-text text-end">
-                          Côut de la consultation
-                        </p>
-                        <h5 className="card-title text-end">
-                          {service.price} FCFA
-                        </h5>
-                        <p>
-                          <button
-                            className="btn btn-light btn-sm rounded-4 text-primary py-2"
-                            onClick={() => handleClick(service.uuid)}
-                          >
-                            <span className="text-xs">
-                              Demander un rendez-vous
-                            </span>
-                          </button>
-                        </p>
-                      </div>
+                      <h4 className="card-title text-sm">{service.name}</h4>
+                      <p className="my-0 card-text text-end">
+                        {t("service-page-title1")}
+                      </p>
+                      <h5 className="card-title text-end">
+                        {service.price} XAF
+                      </h5>
+                      <p>
+                        <button
+                          className="btn btn-light btn-sm rounded-4 text-primary py-2"
+                          onClick={() => handleClick(service.uuid)}
+                        >
+                          <span className="text-xs">
+                            {t("service-page-title2")}
+                          </span>
+                        </button>
+                      </p>
+                      {toast && <ToastNotifications type={toast.type} message={toast.message} position={toast.position} />}
+                      {/* Le composant ToastNotifications doit être rendu une seule fois dans l'arborescence des composants */}
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       ) : (
         <div className="container">
-          <h2>
-            Vous n'êtes pas connecté. Vous ne pouvez pas accéder à cette page.
-          </h2>
+          <h2>{t("no-authorized")}</h2>
         </div>
       )}
     </>

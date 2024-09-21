@@ -1,0 +1,23 @@
+/* Style personnalisé pour les toasts de succès */
+.toast-success {
+  background-color: green !important;
+  color: white !important;
+  padding: 15px 30px;
+  border-radius: 5px;
+}
+
+/* Style personnalisé pour les toasts d'information */
+.toast-info {
+  background-color: violet !important;
+  color: white !important;
+  padding: 15px 30px;
+  border-radius: 5px;
+}
+
+/* Style personnalisé pour les toasts d'erreur */
+.toast-error {
+  background-color: red !important;
+  color: white !important;
+  padding: 15px 30px;
+  border-radius: 5px;
+}

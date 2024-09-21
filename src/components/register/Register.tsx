@@ -1,10 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const userRef = useRef<HTMLInputElement>(null);
-  const errRef = useRef<HTMLDivElement>(null);
 
   const [ID, setID] = useState("");
   const [password, setPassword] = useState("");

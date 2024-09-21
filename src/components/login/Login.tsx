@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./Login.css";
 import { useAuth } from "../../context/AuthContext";
 
@@ -12,6 +13,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { login, user } = useAuth();
 
@@ -36,11 +38,11 @@ function Login() {
       {user ? (
         <div className="container">
           <div className="container col-xl-10 col-xxl-8 px-4 py-5">
-            <h1 className="text-center">Téléconsultation avec un médécin</h1>
+            <h1 className="text-center">{t("teleconsultion-title")}</h1>
             <div className="row align-items-center g-lg-5 py-5">
               <div className="col-md-6 d-flex align-items-center justify-content-center border rounded-5 bg-blue-400 text-white min-vh-100">
                 <h2 className="text-uppercase text-center">
-                  <strong>Royal clinique</strong>
+                  <strong>{t("login-title2")}</strong>
                 </h2>
               </div>
               <div className="col-md-6 text-center text-lg-start mt-0 pt-0">
@@ -54,8 +56,8 @@ function Login() {
                       className="img-fluid flex-shrink-0"
                     />
                     <div className="centered">
-                      <p className="my-0">Appel video et chat</p>
-                      <p>confidentiel et sécurisé</p>
+                      <p className="my-0">{t("login-title3")}</p>
+                      <p>{t("login-title4")}</p>
                     </div>
                   </div>
                   <div className="liste">
@@ -67,9 +69,9 @@ function Login() {
                       className="img-fluid flex-shrink-0"
                     />
                     <div className="centered my-1">
-                      <p className="my-0">Accès sécurisé à votre dossier</p>
-                      <p className="my-0">médical en ligne</p>
-                      <p>partout et à tout moment</p>
+                      <p className="my-0">{t("login-title5")}</p>
+                      <p className="my-0">{t("login-title6")}</p>
+                      <p>{t("login-title7")}</p>
                     </div>
                   </div>
                   <div className="liste">
@@ -81,8 +83,8 @@ function Login() {
                       className="img-fluid flex-shrink-0"
                     />
                     <div className="centered">
-                      <p className="my-0">Confidentialité </p>
-                      <p>de vos données</p>
+                      <p className="my-0">{t("login-title8")}</p>
+                      <p>{t("login-title9")}</p>
                     </div>
                   </div>
                   <div className="liste">
@@ -93,7 +95,7 @@ function Login() {
                       height="32"
                       className="img-fluid flex-shrink-0"
                     />
-                    <div className="centered">Gain de temps</div>
+                    <div className="centered">{t("login-title10")}</div>
                   </div>
                 </div>
               </div>
@@ -103,7 +105,7 @@ function Login() {
       ) : (
         <div className="container">
           <div className="container col-xl-10 col-xxl-8 px-4 py-5">
-            <h1 className="text-center">Téléconsultation avec un médécin</h1>
+            <h1 className="text-center">{t("teleconsultion-title")}</h1>
             <div className="row align-items-center g-lg-5 py-5">
               <div className="col-md-10 mx-auto col-lg-6">
                 <p className="text-center">
@@ -115,8 +117,8 @@ function Login() {
                   className="p-4 p-md-5 border rounded-5 bg-blue-400 text-white"
                   onSubmit={handleSubmit}
                 >
-                  <h3 className="text-center">Vous êtes patient</h3>
-                  <h5 className="text-center mb-5">Accédez à votre portail</h5>
+                  <h3 className="text-center">{t("login-form-title")}</h3>
+                  <h5 className="text-center mb-5">{t("login-title11")}</h5>
                   <div className="form-floating mb-3">
                     <input
                       type="text"
@@ -127,7 +129,9 @@ function Login() {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
-                    <label htmlFor="floatingInput">Utilisateur</label>
+                    <label htmlFor="floatingInput">
+                      {t("login-form-username")}
+                    </label>
                   </div>
                   <div className="form-floating mb-3">
                     <input
@@ -138,7 +142,9 @@ function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <label htmlFor="floatingPassword">Mot de passe</label>
+                    <label htmlFor="floatingPassword">
+                      {t("login-form-password")}
+                    </label>
                   </div>
                   <button
                     type="submit"
@@ -160,8 +166,8 @@ function Login() {
                       className="img-fluid flex-shrink-0"
                     />
                     <div className="centered">
-                      <p className="my-0">Appel video et chat</p>
-                      <p>confidentiel et sécurisé</p>
+                      <p className="my-0">{t("login-title3")}</p>
+                      <p>{t("login-title4")}</p>
                     </div>
                   </div>
                   <div className="liste">
@@ -173,9 +179,9 @@ function Login() {
                       className="img-fluid flex-shrink-0"
                     />
                     <div className="centered">
-                      <p className="my-0">Accès sécurisé à votre dossier</p>
-                      <p className="my-0">médical en ligne</p>
-                      <p>partout et à tout moment</p>
+                      <p className="my-0">{t("login-title5")}</p>
+                      <p className="my-0">{t("login-title6")}</p>
+                      <p>{t("login-title7")}</p>
                     </div>
                   </div>
                   <div className="liste">
@@ -187,8 +193,8 @@ function Login() {
                       className="img-fluid flex-shrink-0"
                     />
                     <div className="centered">
-                      <p className="my-0">Confidentialité </p>
-                      <p>de vos données</p>
+                      <p className="my-0">{t("login-title8")}</p>
+                      <p>{t("login-title9")}</p>
                     </div>
                   </div>
                   <div className="liste">
@@ -199,7 +205,7 @@ function Login() {
                       height="32"
                       className="img-fluid flex-shrink-0"
                     />
-                    <div className="centered">Gain de temps</div>
+                    <div className="centered">{t("login-title10")}</div>
                   </div>
                 </div>
               </div>

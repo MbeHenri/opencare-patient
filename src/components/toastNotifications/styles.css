@@ -1,0 +1,32 @@
+/* styles.css */
+.toast-success {
+    background-color: #4CAF50; /* Couleur de fond pour les succès */
+    color: white;
+  }
+  
+  .toast-error {
+    background-color: #f44336; /* Couleur de fond pour les erreurs */
+    color: white;
+  }
+  
+  .toast-info {
+    background-color: #2196F3; /* Couleur de fond pour les informations */
+    color: white;
+  }
+  
+  /* Ajouter des icônes (par exemple, avec Font Awesome) */
+  .toast-success::before {
+    content: '✔'; /* Icône de succès */
+    margin-right: 8px;
+  }
+  
+  .toast-error::before {
+    content: '✘'; /* Icône d'erreur */
+    margin-right: 8px;
+  }
+  
+  .toast-info::before {
+    content: 'ℹ'; /* Icône d'information */
+    margin-right: 8px;
+  }
+  

@@ -22,32 +22,28 @@ import Visionneuse from "./screens/Visionneuse/Visionneuse";
 import DemandeService from "./screens/DemandeService/DemandeService";
 import PiecesJointes from "./screens/PiecesJointes/PiecesJointes";
 import PatientAppointement from "./screens/PatientAppointement/PatientAppointement";
-import Dashboard from "./screens/Dashboard/Dashboard";
 import Visite from "./screens/Visite/Visite";
 import Header from "./components/header/Header";
 import { AuthProvider } from "./context/AuthContext";
 import Footer from "./components/footer/Footer";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DetailsFacture from "./screens/DetailsFacture/DetailsFacture";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import des styles CSS par défaut
+//import './style.css'; // Vos propres styles si nécessaire
 
 function App() {
+
   return (
     <BrowserRouter>
       <AuthProvider>
+      <div className="d-flex flex-column min-vh-100 caviar_dreams">
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/contact" element={<Contact />} />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
           <Route
             path="/services"
             element={
@@ -57,7 +53,7 @@ function App() {
             }
           />
           <Route
-            path="/teleconsultation/:url"
+            path="/teleconsultation"
             element={
               <ProtectedRoute>
                 <Teleconsultation />
@@ -192,9 +188,25 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         <Footer />
+        <ToastContainer
+        position="top-center"
+        autoClose={false} // Pour ne pas fermer automatiquement
+        hideProgressBar={true} // Masquer la barre de progression
+        closeOnClick={false} // Ne pas fermer en cliquant dessus
+        pauseOnHover // Fermer quand on passe la souris
+        draggable={false} // Désactiver le déplacement
+      />
+        </div>
       </AuthProvider>
     </BrowserRouter>
   );

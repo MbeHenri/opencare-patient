@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "./Bloc2.css";
 
 function Bloc2() {
+  const { t } = useTranslation();
   return (
     <div className="container">
       <div className="container col-xl-10 col-xxl-8 px-4 py-5">
@@ -17,9 +19,7 @@ function Bloc2() {
                   className="img-fluid flex-shrink-0 my-2"
                 />
                 <div className="centered2">
-                  <p className="my-0">
-                    Consultation et suivi de vos patients en ligne
-                  </p>
+                  <p className="my-0">{t("bloc2-title")}</p>
                 </div>
               </div>
               <div className="liste">
@@ -31,10 +31,7 @@ function Bloc2() {
                   className="img-fluid flex-shrink-0 my-2"
                 />
                 <div className="centered2">
-                  <p className="my-0">
-                    Accès sécurisé aux dossiers médicaux de vos patients partout
-                    et à tout moment
-                  </p>
+                  <p className="my-0">{t("bloc2-title1")}</p>
                 </div>
               </div>
               <div className="liste">
@@ -46,17 +43,15 @@ function Bloc2() {
                   className="img-fluid flex-shrink-0 my-2"
                 />
                 <div className="centered2">
-                  <p className="my-0">
-                    Commuication confidentielle et sécurisée
-                  </p>
+                  <p className="my-0">{t("bloc2-title2")}</p>
                 </div>
               </div>
             </div>
           </div>
           <div className="col-md-10 mx-auto col-lg-6">
             <div className="text-center">
-              <h2>Vous êtes médécin</h2>
-              <p>Accédez à votre portail</p>
+              <h2>{t("bloc2-title3")}</h2>
+              <p>{t("login-title11")}</p>
             </div>
             <p className="">
               <img
@@ -69,7 +64,7 @@ function Bloc2() {
             </p>
             <p className="text-center my-3">
               <a
-                href="http://doctor.backbone-corp.com"
+                href="https://doctor.backbone-corp.com"
                 className="btn btn-info"
               >
                 {/*<img
@@ -79,7 +74,7 @@ function Bloc2() {
                   height="32"
                   className="img-fluid mx-auto d-block"
                 />*/}
-                Cliquez ici
+                 {t("bloc2-btn-text")}
               </a>
             </p>
           </div>

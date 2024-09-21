@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axios";
@@ -14,6 +15,7 @@ interface Invoice {
 
 function DetailsFacture() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { appointment_uuid, idInvoice, service_name } = useParams();
   const { user } = useAuth();
   const [O3ID, setO3ID] = useState("");
@@ -28,31 +30,33 @@ function DetailsFacture() {
   }, [user]);
 
   useEffect(() => {
-    const facture: Invoice[] = [];
-    const func = async () => {
-      await api
-        .get(`/invoice/${idInvoice}`)
-        .then(function (response) {
-          if (response.status === 200) {
-            setNoFacture(response.data.facture_name);
-            facture.push({
-              service: "",
-              amount_residual: response.data.amount_residual,
-              amount_total: response.data.amount_total,
-              currency: response.data.currency,
-              date: response.data.date,
-              state: response.data.state,
-            });
-            setInvoice(facture);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-    func();
+    if (idInvoice && O3ID) {
+      const facture: Invoice[] = [];
+      const func = async () => {
+        await api
+          .get(`/invoice/${idInvoice}`)
+          .then(function (response) {
+            if (response.status === 200) {
+              setNoFacture(response.data.facture_name);
+              facture.push({
+                service: "",
+                amount_residual: response.data.amount_residual,
+                amount_total: response.data.amount_total,
+                currency: response.data.currency,
+                date: response.data.date,
+                state: response.data.state,
+              });
+              setInvoice(facture);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
+      func();
+    }
     return () => {};
-  }, [idInvoice]);
+  }, [O3ID, idInvoice]);
 
   const handlePayement = () => {
     navigate(`/paiement/${appointment_uuid}`);
@@ -60,28 +64,28 @@ function DetailsFacture() {
 
   return (
     <div className="container caviar_dreams">
-      <h2>Détails de votre facture&nbsp;{noFacture}</h2>
+      <h2>{t("invoice-title")}&nbsp;{noFacture}</h2>
       {invoice.map((item) => (
         <>
           <p>
-            <strong>Service:</strong>
+            <strong>{t("invoice-title1")}</strong>
             &nbsp;&nbsp;{service_name}
           </p>
           <p>
-            <strong>Montant résiduel:</strong>&nbsp;&nbsp;
+            <strong>{t("invoice-title2")}</strong>&nbsp;&nbsp;
             {item.amount_residual}&nbsp;{item.currency}
           </p>
           <p>
-            <strong>Montant total:</strong>&nbsp;&nbsp;
+            <strong>{t("invoice-title3")}</strong>&nbsp;&nbsp;
             {item.amount_total}&nbsp;{item.currency}
           </p>
           <p>
-            <strong>Etat:</strong>&nbsp;&nbsp;
+            <strong>{t("invoice-title4")}</strong>&nbsp;&nbsp;
             {item.state}
           </p>
           <br />
           <button className="btn btn-success" onClick={handlePayement}>
-            Valider le paiement
+            {t("invoice-btn-text")}
           </button>
         </>
       ))}
