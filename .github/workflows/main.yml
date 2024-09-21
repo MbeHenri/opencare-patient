@@ -10,7 +10,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.17'
+
+    - name: Install dependencies
+      run: npm install --force
+
+    - name: Build React App (Patient)
+      run: npm run build
+
     - name: Install rsync and sshpass
       run: sudo apt-get update && sudo apt-get install rsync sshpass
 
@@ -21,14 +32,15 @@ jobs:
         PASS: ${{ secrets.VM_PWD }}
         
       # Déploiement du Portail Patient
-      run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ ${USER}@${HOST}:~/opencare-patient/
+      # run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ ${USER}@${HOST}:~/opencare-patient/
+        run: sshpass -p "$PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ${USER}@${HOST}:~/opencare-patient/
  
-    - name: Build React App on VM-Patient
-      env:
-        HOST: ${{ secrets.VM_HOST }}
-        USER: ${{ secrets.VM_USER }}
-        PASS: ${{ secrets.VM_PWD }}
+    #- name: Build React App on VM-Patient
+    #  env:
+    #    HOST: ${{ secrets.VM_HOST }}
+    #    USER: ${{ secrets.VM_USER }}
+    #    PASS: ${{ secrets.VM_PWD }}
         
       # Compilation du Code de Patient    
-      run: sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd opencare-patient && npm install --force && npm run build'
+      # run: sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd opencare-patient && npm install --force && npm run build'
     
