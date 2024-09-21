@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { Card, Col, Row } from "react-bootstrap";
 import { ToastPosition } from 'react-toastify';
 import { ToastNotifications } from "../../components/toastNotifications/ToastNotifications";
+import { useNavigate } from "react-router-dom";
 
 interface ServiceType {
   uuid: string;
@@ -15,7 +16,7 @@ interface ServiceType {
 }
 
 function Service() {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useTranslation();
   const [O3ID, setO3ID] = useState("");
@@ -53,12 +54,30 @@ function Service() {
   }, [O3ID]);
 
   
-  const handleClick = (service_uuid: string) => {
+  /*const handleClick = (service_uuid: string) => {
     setToast({
       type: 'success',
       message: 'Demande envoyée avec succès',
       position: 'bottom-left' // Choisissez la position ici
     });
+  };*/
+
+  const handleClick = async (service_uuid: string) => {
+    if (window.confirm("Voulez-vous vraiment prendre un rendez-vous?")) {
+      try {
+        const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: 'O3ID' });
+        
+        if (response.status === 201) {
+          alert('Demande envoyée avec succès')
+          navigate(`/demande_service`);
+        } else if (response.status === 202) {
+          alert('Cette demande est déjà en attente de validation');
+          return;
+        }
+      } catch (error) {
+        console.log('Une erreur est survenue lors de l\'envoi de la demande');
+      }
+    }
   };
 
 
