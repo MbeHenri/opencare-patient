@@ -65,7 +65,7 @@ function Service() {
   const handleClick = async (service_uuid: string) => {
     if (window.confirm("Voulez-vous vraiment prendre un rendez-vous?")) {
       try {
-        const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: 'O3ID' });
+        const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: user.uuid });
         
         if (response.status === 201) {
           alert('Demande envoyée avec succès')
