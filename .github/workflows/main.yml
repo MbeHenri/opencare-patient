@@ -15,12 +15,15 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '21.7.2'
-
-    - name: Install frontend dependencies
-      run: npm install 
-
+    
+    - name: Install Yarn
+      run: npm install -g yarn
+      
+    - name: Install App Dependencies
+      run: yarn install --frozen-lockfile
+   
     - name: Build React App 
-      run: npm run build
+      run: yarn build
 
     - name: Install rsync and sshpass
       run: sudo apt-get update && sudo apt-get install rsync sshpass
