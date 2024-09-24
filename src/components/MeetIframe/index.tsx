@@ -6,19 +6,23 @@ interface MeetIframeProps {
 }
 
 export const MeetIframe: React.FC<MeetIframeProps> = ({ url, username }) => {
-  const [isLoading, setIsLoading] = useState(true); // Loader activé par défaut
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  const [showPreloader, setShowPreloader] = useState(false);
+  const [needContinue, setNeedContinue] = useState(true);
+  
+
   // Déplacer l'utilisation de useCallback en dehors de useEffect
-  const handleLoad = useCallback(() => {
-    const iframe = iframeRef.current;
+
+  const handleLogin = useCallback(
+    async (iframe: HTMLIFrameElement) => {
     if (!username || !iframe) return; // Ne pas exécuter si username est vide ou si l'iframe est introuvable
 
     try {
       const iframeWindow = iframe.contentWindow;
       if (!iframeWindow) {
         console.error("Impossible d'accéder à la fenêtre de l'iframe.");
-        setIsLoading(false); // Désactiver le loader si l'iframe est introuvable
+        setShowPreloader(false);
         return;
       }
 
@@ -28,7 +32,7 @@ export const MeetIframe: React.FC<MeetIframeProps> = ({ url, username }) => {
       const isLoggedIn = iframeDocument.querySelector('.user-menu'); // Un élément spécifique à l'utilisateur connecté
       if (isLoggedIn) {
         console.log('Utilisateur déjà connecté.');
-        setIsLoading(false); // Désactiver le loader si l'utilisateur est déjà connecté
+        setShowPreloader(false); // Désactiver le loader si l'utilisateur est déjà connecté
         return; // Pas besoin de soumettre le formulaire
       }
 
@@ -44,39 +48,54 @@ export const MeetIframe: React.FC<MeetIframeProps> = ({ url, username }) => {
         setTimeout(() => {
           loginForm.submit();
           console.log('Formulaire de connexion soumis.');
-          setIsLoading(false); // Désactiver le loader une fois le formulaire soumis
         }, 3000);  // Délai de 3 secondes
       } else {
-        console.error("Champs de formulaire introuvables dans l'iframe.");
-        setIsLoading(false); // Désactiver le loader si les champs ne sont pas trouvés
+        //console.error("Champs de formulaire introuvables dans l'iframe.");
+        setShowPreloader(false);
       }
     } catch (error) {
       console.error("Erreur lors de l'accès au contenu de l'iframe :", error);
-      setIsLoading(false); // Désactiver le loader en cas d'erreur
+      setShowPreloader(false);
     }
-  }, [username]);
+    },
+    [username]
+  );
+
+  const handleLoad = useCallback(
+    async (iframe: HTMLIFrameElement) => {
+      if (needContinue) {
+        await handleLogin(iframe).finally(() => setNeedContinue(false));
+      } else {
+        setShowPreloader(false);
+      }
+    },
+    [handleLogin, needContinue]
+  );
 
   useEffect(() => {
     const iframe = iframeRef.current;
     if (!iframe) return; // Ne pas exécuter si l'iframe est introuvable
 
+    setShowPreloader(true);
+    const load = () => handleLoad(iframe);
     // Associer l'événement de chargement
-    iframe.addEventListener('load', handleLoad);
+    iframe.addEventListener('load', load);
 
     // Nettoyage de l'événement lors du démontage du composant
     return () => {
-      iframe.removeEventListener('load', handleLoad);
+      iframe.removeEventListener('load', load);
     };
   }, [handleLoad]); // Le useEffect dépend de handleLoad, car c'est un callback optimisé
 
   return (
     <div className="row">
       <div className="col-md-12">
-        {isLoading && (
-          <div className="loader-container">
-            <div className="loader">Chargement...</div> {/* Remplace par ton composant de loader si nécessaire */}
-          </div>
-        )}
+        <div
+        className=""
+        style={{ display: showPreloader ? "block" : "none" }}
+      >
+        <span className=""></span>
+      </div>
         <iframe
           ref={iframeRef}
           className="mx auto w-100"
