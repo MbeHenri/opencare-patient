@@ -31,23 +31,16 @@ const LoginForm: React.FC = () => {
     setErrorMessage('');
     setLoading(true);
 
+
     try {
-      // Remplacez l'URL par l'URL de votre API
-      const response = await login(username, password);
-
-      console.log('Réponse de l\'API:', response);
-
-      // Vous pouvez traiter la réponse ici (par exemple, stocker le token, rediriger, etc.)
-      
+      await login(username, password);
+            
       // Réinitialiser les champs
       if (usernameRef.current) usernameRef.current.value = '';
       if (passwordRef.current) passwordRef.current.value = '';
-      
+      //navigate("/");
     } catch (error) {
-      console.log(error)
-        // Gérer les erreurs de réponse de l'API
-        setErrorMessage((error as Error).message|| 'Une erreur s\'est produite lors de la connexion.');
-      
+      setErrorMessage((error as Error).message|| 'Une erreur s\'est produite lors de la connexion.');
     } finally {
       setLoading(false);
     }
