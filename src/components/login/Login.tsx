@@ -33,7 +33,9 @@ const LoginForm: React.FC = () => {
 
 
     try {
-      await login(username, password);
+      const response = await login(username, password);
+
+      console.log('response', response)
             
       // Réinitialiser les champs
       if (usernameRef.current) usernameRef.current.value = '';
