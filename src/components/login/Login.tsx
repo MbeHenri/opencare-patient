@@ -125,6 +125,15 @@ const LoginForm: React.FC = () => {
             <h1 className="text-center">{t("teleconsultion-title")}</h1>
             <div className="row align-items-center g-lg-5 py-5">
               <div className="col-md-10 mx-auto col-lg-6">
+              <div className="col-md-6 d-flex align-items-center justify-content-center border rounded-5 bg-blue-400 text-white min-vh-100">
+                  <h2 className="text-uppercase text-center">
+                    <strong>{t("login-title2")}</strong>
+                  </h2>
+                    <p className="text-center">
+                      ERREUR
+                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                  </p>
+                </div>
                 <form
                     className="p-4 p-md-5 border rounded-5 bg-blue-400 text-white"
                     onSubmit={handleSubmit}
