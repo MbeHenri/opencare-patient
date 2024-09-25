@@ -65,6 +65,7 @@ const LoginForm: React.FC = () => {
                     <strong>{t("login-title2")}</strong>
                   </h2>
                     <p className="text-center">
+                      ERREUR
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                   </p>
                 </div>
