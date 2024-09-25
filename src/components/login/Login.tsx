@@ -40,10 +40,12 @@ const LoginForm: React.FC = () => {
       if (passwordRef.current) passwordRef.current.value = '';
       //navigate("/");
     } catch (error) {
+      console.log(error)
       setErrorMessage((error as Error).message|| 'Une erreur s\'est produite lors de la connexion.');
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -58,7 +60,6 @@ const LoginForm: React.FC = () => {
                     <strong>{t("login-title2")}</strong>
                   </h2>
                     <p className="text-center">
-                      ERREUR
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                   </p>
                 </div>
@@ -125,15 +126,6 @@ const LoginForm: React.FC = () => {
             <h1 className="text-center">{t("teleconsultion-title")}</h1>
             <div className="row align-items-center g-lg-5 py-5">
               <div className="col-md-10 mx-auto col-lg-6">
-              <div className="col-md-6 d-flex align-items-center justify-content-center border rounded-5 bg-blue-400 text-white min-vh-100">
-                  <h2 className="text-uppercase text-center">
-                    <strong>{t("login-title2")}</strong>
-                  </h2>
-                    <p className="text-center">
-                      ERREUR
-                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                  </p>
-                </div>
                 <form
                     className="p-4 p-md-5 border rounded-5 bg-blue-400 text-white"
                     onSubmit={handleSubmit}
@@ -145,7 +137,7 @@ const LoginForm: React.FC = () => {
                         type="text"
                         className="form-control"
                         placeholder="name@example.com"
-                        id="username"
+                        id="floatingInput"
                         ref={usernameRef}
                         required
                       />
@@ -169,6 +161,13 @@ const LoginForm: React.FC = () => {
                     <button type="submit" disabled={loading} className="w-100 btn btn-lg bg-white text-primary">
                       {loading ? 'Loading...' : 'Login'}
                     </button>
+                    {errorMessage && (
+                      <div className="form-group">
+                        <div className="alert alert-danger" role="alert">
+                          {errorMessage}
+                        </div>
+                      </div>
+                    )}
                   </form>
               </div>
             </div>
