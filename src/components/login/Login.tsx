@@ -28,10 +28,8 @@ function Login() {
       navigate("/");
     } catch (error) {
       const message = (error as Error).message;
+      console.log(error)
       setErrorMessage(message);
-      if (errRef.current) {
-        errRef.current.textContent = message; // Affiche le message d'erreur
-      }
     } finally {
       setLoading(false);
     }
@@ -39,7 +37,6 @@ function Login() {
 
   return (
     <>
-      {" "}
       {user ? (
         <div className="container">
           <div className="container col-xl-10 col-xxl-8 px-4 py-5">
@@ -114,7 +111,7 @@ function Login() {
             <div className="row align-items-center g-lg-5 py-5">
             <div className="col-md-10 mx-auto col-lg-6">
             {/* Div pour afficher les messages d'erreur */}
-            <div ref={errRef} className="alert alert-danger d-none" role="alert">
+            <div className="alert alert-danger d-none" role="alert">
               {errorMessage}
             </div>
             <form
