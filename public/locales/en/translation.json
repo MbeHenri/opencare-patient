@@ -115,6 +115,8 @@
   "invoice-title2": "Remaining amount:",
   "invoice-title3": "Total amount:",
   "invoice-title4": "Status:",
+  "invoice-title5": "Not paid",
+  "invoice-title6": "Paid",
   "invoice-btn-text": "Confirm Payment",
   "medicamentation-page-title1": "Active Medications",
   "medicamentation-page-title2": "Past Medications",

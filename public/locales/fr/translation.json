@@ -121,6 +121,8 @@
   "invoice-title2": "Montant résiduel:",
   "invoice-title3": "Montant total:",
   "invoice-title4": "Etat:",
+  "invoice-title5": "Pas encore payé",
+  "invoice-title6": "Payé",
   "invoice-btn-text": "Confirmer le paiement",
 
   "medicamentation-page-title1": "Médicaments en cours",

@@ -81,7 +81,7 @@ function DetailsFacture() {
           </p>
           <p>
             <strong>{t("invoice-title4")}</strong>&nbsp;&nbsp;
-            {item.state}
+            {item.state == "not_paid" ? (<span>{t("invoice-title5")}</span>) : (<span>{t("invoice-title6")}</span>)}
           </p>
           <br />
           <button className="btn btn-success" onClick={handlePayement}>
@@ -94,3 +94,5 @@ function DetailsFacture() {
 }
 
 export default DetailsFacture;
+
+
