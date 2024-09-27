@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 
 /*interface Service {
@@ -82,16 +83,44 @@ const handlePayment = async (mode_reglement: any) => {
       .put(`/appointment/${uuidAppointment}/pay`, {})
       .then((response) => {
         if (response.status === 201 || response.status === 202) {
-          toast.success(`Le paiement a été effectué avec succès. Numéro de téléphone utilisé : ${mobile}`);
+          //toast.success(`Le paiement a été effectué avec succès. Numéro de téléphone utilisé : ${mobile}`);
+          toast.success(`Le paiement a été effectué avec succès. Numéro de téléphone utilisé : ${mobile}`, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: 0,
+            toastId: "my_toast",
+          });
           navigate(`/patient_appointement`);
         }
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Une erreur est survenue lors de l'envoi du paiement");
+        toast.error("Une erreur est survenue lors de l'envoi du paiement", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: 0,
+          toastId: "my_toast",
+        });
       });
   } else {
-    toast.error("Une erreur est survenue lors du paiement de votre facture. Veuillez réessayer.");
+    toast.error("Une erreur est survenue lors du paiement de votre facture. Veuillez réessayer.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: 0,
+      toastId: "my_toast",
+    });
     return;
   }
 };
