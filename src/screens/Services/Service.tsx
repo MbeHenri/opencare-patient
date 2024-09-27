@@ -5,9 +5,10 @@ import { useTranslation } from "react-i18next";
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 import { Card, Col, Row } from "react-bootstrap";
-import { ToastPosition } from 'react-toastify';
-import { ToastNotifications } from "../../components/toastNotifications/ToastNotifications";
+import { ToastContainer, toast, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import { useNavigate } from "react-router-dom";
+
 
 interface ServiceType {
   uuid: string;
@@ -22,9 +23,6 @@ function Service() {
   const [O3ID, setO3ID] = useState("");
 
   const [services, setServices] = useState<ServiceType[]>([]);
-
-  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info', message: string, position?: ToastPosition } | null>(null);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -68,14 +66,44 @@ function Service() {
         const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: O3ID });
         
         if (response.status === 201) {
-          alert('Demande envoyée avec succès')
+          //alert('Demande envoyée avec succès')
+          toast.success("Demande envoyée avec succès", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: 0,
+            toastId: "my_toast",
+          });
           navigate(`/demande_service`);
         } else if (response.status === 202) {
-          alert('Cette demande est déjà en attente de validation');
+          //alert('Cette demande est déjà en attente de validation');
+          toast.error('Cette demande est déjà en attente de validation', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: 0,
+            toastId: "my_toast",
+          });
           return;
         }
       } catch (error) {
-        console.log('Une erreur est survenue lors de l\'envoi de la demande');
+        //console.log('Une erreur est survenue lors de l\'envoi de la demande');
+        toast.error('Une erreur est survenue lors de l\'envoi de la demande', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: 0,
+          toastId: "my_toast",
+        });
       }
     }
   };
@@ -121,8 +149,6 @@ function Service() {
                           </span>
                         </button>
                       </p>
-                      {toast && <ToastNotifications type={toast.type} message={toast.message} position={toast.position} />}
-                      {/* Le composant ToastNotifications doit être rendu une seule fois dans l'arborescence des composants */}
                     </div>
                   </div>
                 </Card.Body>
