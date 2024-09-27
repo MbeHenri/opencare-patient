@@ -8,7 +8,7 @@ function Bloc3() {
     <div className="caviar_dreams">
       <div className="row bg-blue-400 text-white p-2">
         <p className="text-center my-0">{t("bloc3-page-title1")}</p>
-        <p className="text-center my-0">Date: 15 mai 2024 - 14h</p>
+        <p className="text-center my-0">Date: ---</p>
       </div>
       <div className="row bg-secondary-subtle">
         <p className="h5 text-secondary px-5 py-2">
@@ -17,19 +17,19 @@ function Bloc3() {
       </div>
       <div className="text-center p-3">
         <p className="my-0">
-          <b>{t("bloc3-page-title3")}</b> : Danielle Mbah
+          <b>{t("bloc3-page-title3")}</b> : ---
         </p>
         <p className="my-0">
-          <b>{t("bloc3-page-title4")}</b> : 32 {t("bloc3-page-title5")}
+          <b>{t("bloc3-page-title4")}</b> : --- {t("bloc3-page-title5")}
         </p>
         <p className="my-0">
-          <b>{t("bloc3-page-title6")}</b> : Femme
+          <b>{t("bloc3-page-title6")}</b> : ---
         </p>
         <p className="my-0">
-          <b>{t("bloc3-page-title8")}</b> : Camerounaise
+          <b>{t("bloc3-page-title8")}</b> : ---
         </p>
         <p>
-          <b>{t("bloc3-page-title9")}</b> : Yaoundé - Cameroun
+          <b>{t("bloc3-page-title9")}</b> : ---
         </p>
       </div>
       <div className="row bg-secondary-subtle">
@@ -83,10 +83,10 @@ function Bloc3() {
               <b>{t("bloc3-page-title20")}</b> :--- cm
             </p>
             <p className="text-end mb-2 pe-3">
-              <b>{t("bloc3-page-title21")}</b> : A
+              <b>{t("bloc3-page-title21")}</b> : ---
             </p>
             <p className="text-end mb-2 pe-3">
-              <b>{t("bloc3-page-title22")}</b> : +
+              <b>{t("bloc3-page-title22")}</b> : ---
             </p>
           </div>
         </div>

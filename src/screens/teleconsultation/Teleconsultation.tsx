@@ -59,7 +59,7 @@ function Teleconsultation(): JSX.Element {
 		{t("teleconsultation-page-title2")}
 	      </h2>
 	      <h4 className="text-center">
-		{t("teleconsultation-page-title3")} Dr. Yoning François
+		{t("teleconsultation-page-title3")} {t("teleconsultation-page-title6")}
 	      </h4>
 	      <p className="text-center">{t("teleconsultation-page-title4")}</p>
 	      <hr />
