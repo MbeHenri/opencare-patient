@@ -22,7 +22,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 function Paiement() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const { uuidAppointment } = useParams();
   const { user } = useAuth();
   //const [O3ID, setO3ID] = useState("");
@@ -31,6 +31,7 @@ function Paiement() {
   const [displayChoix, setDisplayChoix] = useState<String>("");
   const [displayPhoneNumber, setDisplayPhoneNumber] = useState<String>("");
   const [mobile, setMobile] = useState<boolean>(false);
+  const [phone, setPhone] = useState("")
   const [defaultDisplay, setDefaultDisplay] = useState<boolean>(true);
 
   //const [requestValidated, setRequestValidated] = useState<Service[]>([]);
@@ -84,16 +85,29 @@ const handlePayment = async (mode_reglement: any) => {
       .then((response) => {
         if (response.status === 201 || response.status === 202) {
           //toast.success(`Le paiement a été effectué avec succès. Numéro de téléphone utilisé : ${mobile}`);
-          toast.success(`Le paiement a été effectué avec succès. Numéro de téléphone utilisé : ${mobile}`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            progress: 0,
-            toastId: "my_toast",
-          });
+          if(i18n.language === "en"){
+            toast.success(`Payment was made successfully. Telephone number used : ${phone}`, {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: 0,
+              toastId: "my_toast",
+            });
+          } else {
+            toast.success(`Le paiement a été effectué avec succès. Numéro de téléphone utilisé : ${phone}`, {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: 0,
+              toastId: "my_toast",
+            });
+          }
           navigate(`/patient_appointement`);
         }
       })
@@ -221,6 +235,8 @@ const handlePayment = async (mode_reglement: any) => {
                     type="text"
                     className="rounded-4 form-control w-100"
                     placeholder="+237"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
                 <button

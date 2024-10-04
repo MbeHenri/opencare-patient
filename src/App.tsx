@@ -30,6 +30,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import DetailsFacture from "./screens/DetailsFacture/DetailsFacture";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import des styles CSS par défaut
+import Factures from "./screens/Factures/Factures";
 //import './style.css'; // Vos propres styles si nécessaire
 
 function App() {
@@ -193,6 +194,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/factures"
+            element={
+              <ProtectedRoute>
+                <Factures />
               </ProtectedRoute>
             }
           />

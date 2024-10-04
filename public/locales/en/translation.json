@@ -216,5 +216,10 @@
   "contact-page-title9": "An hospital",
   "contact-page-title10": "Name",
   "contact-page-title11": "Firstname",
-  "contact-page-btn-text": "Send"
+  "contact-page-btn-text": "Send",
+  "invoices-table-th1": "Num invoice" ,
+  "invoices-table-th2": "Montant" ,
+  "invoices-table-th3": "Satus" ,
+  "invoices-table-th4": "Date of payment" ,
+  "invoices-table-th5": "Service"
 }

@@ -231,5 +231,10 @@
   "contact-page-title9": "Un hôpital",
   "contact-page-title10": "Nom",
   "contact-page-title11": "Prénom",
-  "contact-page-btn-text": "Envoyez"
+  "contact-page-btn-text": "Envoyez",
+  "invoices-table-th1": "Num facture" ,
+  "invoices-table-th2": "Montant" ,
+  "invoices-table-th3": "Etat" ,
+  "invoices-table-th4": "Date de paiement" ,
+  "invoices-table-th5": "Service"
 }

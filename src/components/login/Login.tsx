@@ -15,6 +15,8 @@ function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  console.log(t)
+
   const { login, user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +36,6 @@ function Login() {
 
   return (
     <>
-      {" "}
       {user ? (
         <div className="container">
           <div className="container col-xl-10 col-xxl-8 px-4 py-5">

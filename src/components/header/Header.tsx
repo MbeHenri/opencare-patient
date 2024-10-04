@@ -77,7 +77,7 @@ function Header() {
                             <Dropdown.Item href="/profile">
                               {t("profile")}
                             </Dropdown.Item>
-                            <Dropdown.Item href="#/factures">
+                            <Dropdown.Item href="/factures">
                               {t("invoices")}
                             </Dropdown.Item>
                             <Dropdown.Item

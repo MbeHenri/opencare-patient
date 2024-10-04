@@ -19,7 +19,7 @@ interface ServiceType {
 function Service() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [O3ID, setO3ID] = useState("");
 
   const [services, setServices] = useState<ServiceType[]>([]);
@@ -61,13 +61,41 @@ function Service() {
   };*/
 
   const handleClick = async (service_uuid: string) => {
-    if (window.confirm("Voulez-vous vraiment prendre un rendez-vous?")) {
-      try {
-        const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: O3ID });
-        
-        if (response.status === 201) {
-          //alert('Demande envoyée avec succès')
-          toast.success("Demande envoyée avec succès", {
+    if(i18n.language === "en"){
+      if (window.confirm("Do you really want to make an appointment?")) {
+        try {
+          const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: O3ID });
+          
+          if (response.status === 201) {
+            //alert('Demande envoyée avec succès')
+            toast.success("Request sent successfully", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: 0,
+              toastId: "my_toast",
+            });
+            navigate(`/demande_service`);
+          } else if (response.status === 202) {
+            //alert('Cette demande est déjà en attente de validation');
+            toast.error('This request is already awaiting validation', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: 0,
+              toastId: "my_toast",
+            });
+            return;
+          }
+        } catch (error) {
+          //console.log('Une erreur est survenue lors de l\'envoi de la demande');
+          toast.error('An error occurred while sending the request', {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: true,
@@ -76,34 +104,54 @@ function Service() {
             draggable: false,
             progress: 0,
             toastId: "my_toast",
-          });
-          navigate(`/demande_service`);
-        } else if (response.status === 202) {
-          //alert('Cette demande est déjà en attente de validation');
-          toast.error('Cette demande est déjà en attente de validation', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            progress: 0,
-            toastId: "my_toast",
-          });
-          return;
+          }); 
         }
-      } catch (error) {
-        //console.log('Une erreur est survenue lors de l\'envoi de la demande');
-        toast.error('Une erreur est survenue lors de l\'envoi de la demande', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: false,
-          progress: 0,
-          toastId: "my_toast",
-        });
+      }
+    } else {
+      if (window.confirm("Voulez-vous vraiment prendre un rendez-vous?")) {
+        try {
+          const response = await api.post(`/demand/new`, { service_id: service_uuid, patient_id: O3ID });
+          
+          if (response.status === 201) {
+            //alert('Demande envoyée avec succès')
+            toast.success("Demande envoyée avec succès", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: 0,
+              toastId: "my_toast",
+            });
+            navigate(`/demande_service`);
+          } else if (response.status === 202) {
+            //alert('Cette demande est déjà en attente de validation');
+            toast.error('Cette demande est déjà en attente de validation', {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: 0,
+              toastId: "my_toast",
+            });
+            return;
+          }
+        } catch (error) {
+          //console.log('Une erreur est survenue lors de l\'envoi de la demande');
+          toast.error('Une erreur est survenue lors de l\'envoi de la demande', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: 0,
+            toastId: "my_toast",
+          }); 
+        }
       }
     }
   };
